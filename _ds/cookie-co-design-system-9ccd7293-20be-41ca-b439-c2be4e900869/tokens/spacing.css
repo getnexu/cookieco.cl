@@ -1,0 +1,9 @@
+:root{
+  --space-0:0px;--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;
+  --space-6:24px;--space-7:32px;--space-8:40px;--space-9:48px;--space-10:64px;--space-11:80px;
+  --space-12:96px;--space-13:128px;--space-14:160px;
+
+  --gutter-page:24px;--gutter-page-lg:56px;
+  --max-width-content:1240px;--max-width-prose:62ch; /* @kind spacing */
+  --control-height-sm:34px;--control-height-md:44px;--control-height-lg:54px; /* @kind spacing */
+}

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/cookie-co-design-system-9ccd7293-20be-41ca-b439-c2be4e900869/styles.css">
+<script src="_ds/cookie-co-design-system-9ccd7293-20be-41ca-b439-c2be4e900869/_ds_bundle.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.js"></script>
+<script type="module">
+  import * as D from "./data/catalogo.js";
+  window.COOKIECO_DATA = D;
+  window.dispatchEvent(new Event("cookieco-data"));
+</script>
+<style>
+  body { margin:0; background:var(--surface-page); -webkit-font-smoothing:antialiased; }
+  * { box-sizing:border-box; }
+  a { color:var(--morado-600); text-decoration:none; }
+  a:hover { color:var(--morado-900); }
+  button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline:none; box-shadow:0 0 0 4px rgba(122,79,182,.38); }
+  input[type=number]::-webkit-inner-spin-button { opacity:.4; }
+  @keyframes cc-rise { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+</style>
+</helmet>
+<div style="min-height:100vh;background:var(--surface-page);font-family:var(--font-sans);color:var(--text-body)">
+
+<sc-if value="{{ noAuth }}" hint-placeholder-val="{{ true }}">
+  <main style="min-height:100vh;display:grid;place-items:center;padding:24px;background:var(--grad-nocturno)">
+    <div style="width:min(100%,400px);padding:clamp(24px,5vw,36px);border-radius:32px;background:var(--surface-card);box-shadow:var(--shadow-xl);display:grid;gap:16px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <img src="assets/brand/sello-cookieco.png" alt="COOKIE.CO" style="width:48px;height:48px;border-radius:50%;box-shadow:var(--shadow-sm)">
+        <div style="display:grid;gap:2px">
+          <span style="font-size:15px;font-weight:800;letter-spacing:.06em;color:var(--ink-900)">COOKIE<span style="color:var(--morado-600)">.CO</span></span>
+          <span style="font:600 11px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted)">Panel de administración</span>
+        </div>
+      </div>
+      <h1 style="font-family:var(--font-display);font-size:32px;line-height:1.06;letter-spacing:-.02em;margin:0;color:var(--ink-900)">Entra al panel</h1>
+      <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Input" label="PIN de acceso" type="password" inputMode="numeric" value="{{ pin }}" onChange="{{ onPin }}" onKeyDown="{{ pinEnter }}" error="{{ pinErr }}" hint="Acceso demo local. La autenticación real llega en la Fase 2." hint-size="100%,88px"></x-import>
+      <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" fullWidth="{{ true }}" onClick="{{ entrar }}" hint-size="100%,44px">Entrar al panel</x-import>
+      <a href="./" style="font-size:13px;font-weight:600;justify-self:center">← Volver a la tienda</a>
+    </div>
+  </main>
+</sc-if>
+
+<sc-if value="{{ auth }}" hint-placeholder-val="{{ false }}">
+<header style="position:sticky;top:0;z-index:40;background:rgba(253,250,245,.78);backdrop-filter:saturate(1.3) blur(18px);border-bottom:1px solid var(--border-subtle)">
+  <div style="max-width:1240px;margin:0 auto;padding:10px clamp(16px,4vw,40px);display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <img src="assets/brand/sello-cookieco.png" alt="COOKIE.CO" style="width:36px;height:36px;border-radius:50%;box-shadow:var(--shadow-sm)">
+    <span style="font-size:15px;font-weight:800;letter-spacing:.06em;color:var(--ink-900);white-space:nowrap">COOKIE<span style="color:var(--morado-600)">.CO</span></span>
+    <span style="height:24px;display:inline-flex;align-items:center;padding:0 10px;border-radius:999px;background:var(--lila-100);color:var(--morado-700);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase">Panel</span>
+    <span style="flex:1"></span>
+    <a href="./" style="height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--border-default);background:var(--surface-card);display:inline-flex;align-items:center;white-space:nowrap;flex:0 0 auto;font-size:13px;font-weight:600;color:var(--ink-800)">Ver tienda</a>
+    <button onClick="{{ salir }}" style="white-space:nowrap;flex:0 0 auto;height:40px;padding:0 16px;border-radius:999px;border:1px solid transparent;background:transparent;cursor:pointer;font-family:var(--font-sans);font-size:13px;font-weight:600;color:var(--text-muted)">Salir</button>
+  </div>
+  <nav style="max-width:1240px;margin:0 auto;padding:0 clamp(16px,4vw,40px) 10px;display:flex;gap:6px;overflow-x:auto">
+    <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="5">
+      <button onClick="{{ tb.set }}" style="{{ tb.style }}">{{ tb.label }}</button>
+    </sc-for>
+  </nav>
+</header>
+
+<main style="max-width:1240px;margin:0 auto;padding:clamp(20px,3vw,36px) clamp(16px,4vw,40px) 80px">
+
+<!-- ========== MÉTRICAS ========== -->
+<sc-if value="{{ esMetricas }}" hint-placeholder-val="{{ true }}">
+  <div style="display:grid;gap:22px">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px">
+      <h1 style="font-family:var(--font-display);font-size:clamp(30px,5vw,44px);line-height:1.04;letter-spacing:-.02em;margin:0;color:var(--ink-900)">Métricas</h1>
+      <span style="font-size:13px;color:var(--text-muted);max-width:52ch">Pedidos generados en este navegador. En la Fase 2 se conectan los pedidos de todos los clientes.</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,180px),1fr));gap:12px">
+      <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="6">
+        <div style="padding:18px 20px;border-radius:22px;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-xs);display:grid;gap:6px">
+          <span style="font:600 11px/1.2 var(--font-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted)">{{ k.t }}</span>
+          <span style="font-family:var(--font-mono);font-size:24px;color:var(--ink-900)">{{ k.v }}</span>
+          <span style="font-size:12px;color:var(--text-muted)">{{ k.n }}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ sinPedidos }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:44px 24px;border-radius:32px;background:var(--crema-100);border:1px solid var(--border-subtle);display:grid;gap:8px;justify-items:center;text-align:center">
+        <span style="font:400 24px/1.2 var(--font-display);color:var(--ink-900)">Todavía no hay pedidos.</span>
+        <span style="font-size:14px;line-height:1.6;color:var(--text-muted);max-width:44ch">Cuando un cliente genere un pedido en la tienda desde este navegador, aquí verás ventas, sabores más pedidos y tipos de entrega.</span>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ hayPedidos }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px;align-items:start">
+        <div style="padding:22px;border-radius:22px;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-xs);display:grid;gap:14px">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline">
+            <span style="font:400 20px/1.2 var(--font-display);color:var(--ink-900)">Ventas · últimos 14 días</span>
+            <span style="font-family:var(--font-mono);font-size:13px;color:var(--morado-600)">{{ ventas14 }}</span>
+          </div>
+          <div style="display:flex;align-items:flex-end;gap:6px;height:160px;padding-top:8px;border-bottom:1px solid var(--border-subtle)">
+            <sc-for list="{{ dias }}" as="d" hint-placeholder-count="14">
+              <div title="{{ d.titulo }}" style="flex:1;min-width:0;height:100%;display:flex;align-items:flex-end">
+                <div style="{{ d.barra }}"></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:6px">
+            <sc-for list="{{ dias }}" as="d" hint-placeholder-count="14">
+              <span style="flex:1;min-width:0;text-align:center;font-family:var(--font-mono);font-size:10px;color:var(--text-muted)">{{ d.label }}</span>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="padding:22px;border-radius:22px;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-xs);display:grid;gap:12px">
+          <span style="font:400 20px/1.2 var(--font-display);color:var(--ink-900)">Sabores más pedidos</span>
+          <sc-for list="{{ topSabores }}" as="ts" hint-placeholder-count="6">
+            <div style="display:grid;gap:5px">
+              <div style="display:flex;justify-content:space-between;gap:10px;font-size:13px">
+                <span style="color:var(--ink-900);font-weight:600">{{ ts.nombre }}</span>
+                <span style="font-family:var(--font-mono);color:var(--text-muted)">{{ ts.n }}</span>
+              </div>
+              <div style="height:8px;border-radius:999px;background:var(--crema-200);overflow:hidden"><div style="{{ ts.barra }}"></div></div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="padding:22px;border-radius:22px;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-xs);display:grid;gap:12px">
+          <span style="font:400 20px/1.2 var(--font-display);color:var(--ink-900)">Cómo se entregan</span>
+          <sc-for list="{{ mix }}" as="mx" hint-placeholder-count="4">
+            <div style="display:grid;gap:5px">
+              <div style="display:flex;justify-content:space-between;gap:10px;font-size:13px">
+                <span style="color:var(--ink-900);font-weight:600">{{ mx.t }}</span>
+                <span style="font-family:var(--font-mono);color:var(--text-muted)">{{ mx.v }}</span>
+              </div>
+              <div style="height:8px;border-radius:999px;background:var(--crema-200);overflow:hidden"><div style="{{ mx.barra }}"></div></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="padding:22px;border-radius:22px;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-xs);display:grid;gap:4px;margin-top:16px">
+        <span style="font:400 20px/1.2 var(--font-display);color:var(--ink-900);margin-bottom:8px">Últimos pedidos</span>
+        <sc-for list="{{ ultimos }}" as="u" hint-placeholder-count="5">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:12px 0;border-top:1px solid var(--border-subtle)">
+            <span style="font-family:var(--font-mono);font-size:13px;color:var(--morado-600);min-width:132px">{{ u.numero }}</span>
+            <span style="flex:1;min-width:160px;font-size:14px;color:var(--ink-900)">{{ u.cliente }}</span>
+            <span style="font-size:13px;color:var(--text-muted);min-width:150px">{{ u.entrega }} · {{ u.fecha }}</span>
+            <span style="font-family:var(--font-mono);font-size:14px;color:var(--ink-900);min-width:90px;text-align:right">{{ u.total }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+</sc-if>
+
+<!-- ========== PRODUCTOS ========== -->
+<sc-if value="{{ esProductos }}" hint-placeholder-val="{{ false }}">
+  <div style="display:grid;gap:18px">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px">
+      <div style="display:grid;gap:6px">
+        <h1 style="font-family:var(--font-display);font-size:clamp(30px,5vw,44px);line-height:1.04;letter-spacing:-.02em;margin:0;color:var(--ink-900)">Productos</h1>
+        <span style="font-size:13px;color:var(--text-muted)">{{ productosResumen }}</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" variant="ghost" size="sm" onClick="{{ restaurarCatalogo }}" hint-size="170px,36px">Restaurar original</x-import>
+        <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" onClick="{{ nuevo }}" hint-size="170px,44px">Agregar producto</x-import>
+      </div>
+    </div>
+
+    <sc-if value="{{ formAbierto }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:clamp(20px,3vw,28px);border-radius:32px;background:var(--grad-vitrina);border:1px solid var(--border-subtle);box-shadow:var(--shadow-md);display:grid;gap:16px;animation:cc-rise .26s cubic-bezier(.22,.61,.36,1)">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+          <span style="font:400 24px/1.2 var(--font-display);color:var(--ink-900)">{{ formTitulo }}</span>
+          <button onClick="{{ cerrarForm }}" aria-label="Cerrar" style="width:40px;height:40px;border-radius:999px;border:1px solid var(--border-default);background:var(--surface-card);cursor:pointer;font-size:18px;color:var(--ink-800)">×</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px;align-items:start">
+          <div style="display:grid;gap:12px">
+            <div style="position:relative;aspect-ratio:1;border-radius:22px;overflow:hidden;background:repeating-linear-gradient(135deg,var(--crema-100) 0 10px,var(--crema-200) 10px 20px);display:grid;place-items:center;border:1px solid var(--border-subtle)">
+              <sc-if value="{{ fHasFoto }}" hint-placeholder-val="{{ false }}">
+                <img src="{{ fFoto }}" alt="Foto del producto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+              </sc-if>
+              <sc-if value="{{ fSinFoto }}" hint-placeholder-val="{{ true }}">
+                <span style="font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;color:var(--ink-500)">SIN FOTO</span>
+              </sc-if>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <label style="height:40px;padding:0 16px;border-radius:999px;background:var(--accent-primary);color:var(--crema-50);display:inline-flex;align-items:center;font-size:13px;font-weight:600;cursor:pointer;box-shadow:var(--shadow-sm)">
+                Subir foto
+                <input type="file" accept="image/*" onChange="{{ subirFoto }}" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+              </label>
+              <sc-if value="{{ fHasFoto }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ quitarFoto }}" style="height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--border-default);background:var(--surface-card);cursor:pointer;font-size:13px;font-weight:600;color:var(--ink-800)">Quitar foto</button>
+              </sc-if>
+            </div>
+            <span style="font-size:12px;line-height:1.5;color:var(--text-muted)">Se reduce automáticamente a 640 px para que la tienda cargue rápido.</span>
+          </div>
+          <div style="display:grid;gap:12px">
+            <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Input" label="Nombre" value="{{ form.nombre }}" onChange="{{ onF_nombre }}" error="{{ formErr.nombre }}" hint-size="100%,72px"></x-import>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:12px">
+              <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Select" label="Línea" options="{{ lineaOpts }}" value="{{ form.linea }}" onChange="{{ onF_linea }}" hint-size="100%,72px"></x-import>
+              <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Input" label="Precio (CLP)" type="number" inputMode="numeric" value="{{ form.precio }}" onChange="{{ onF_precio }}" error="{{ formErr.precio }}" hint-size="100%,72px"></x-import>
+              <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Select" label="Disponibilidad" options="{{ stockOpts }}" value="{{ form.stock }}" onChange="{{ onF_stock }}" hint-size="100%,72px"></x-import>
+            </div>
+            <label style="display:grid;gap:8px">
+              <span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)">Descripción</span>
+              <textarea value="{{ form.corta }}" onChange="{{ onF_corta }}" rows="3" maxlength="260" placeholder="Masa de vainilla con chips de chocolate y centro de Nutella." style="width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--border-default);background:var(--surface-card);box-shadow:inset 0 1px 3px rgba(30,20,12,.1);font:400 15px/1.5 var(--font-sans);color:var(--text-body);resize:vertical"></textarea>
+              <sc-if value="{{ formErr.corta }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:13px;color:var(--status-danger)">{{ formErr.corta }}</span>
+              </sc-if>
+            </label>
+            <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Input" label="Ingredientes" value="{{ form.ingredientes }}" onChange="{{ onF_ingredientes }}" hint="Separados por coma." hint-size="100%,88px"></x-import>
+            <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Input" label="Alérgenos" value="{{ form.alergenos }}" onChange="{{ onF_alergenos }}" hint="Separados por coma. Se muestran en la ficha." hint-size="100%,88px"></x-import>
+            <div style="display:grid;gap:8px">
+              <span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)">Perfil de sabor · para filtros y quiz</span>
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                <sc-for list="{{ perfilChips }}" as="pc" hint-placeholder-count="5">
+                  <button onClick="{{ pc.toggle }}" style="{{ pc.style }}">{{ pc.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Checkbox" label="Destacar en la portada" checked="{{ form.destacado }}" onChange="{{ onF_destacado }}" hint-size="100%,40px"></x-import>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px">
+              <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" onClick="{{ guardarForm }}" hint-size="170px,44px">Guardar producto</x-import>
+              <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" variant="ghost" onClick="{{ cerrarForm }}" hint-size="110px,44px">Cancelar</x-import>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <sc-for list="{{ filtros }}" as="fl" hint-placeholder-count="4">
+        <button onClick="{{ fl.set }}" style="{{ fl.style }}">{{ fl.label }}</button>
+      </sc-for>
+      <span style="flex:1"></span>
+      <input value="{{ busca }}" onChange="{{ onBusca }}" placeholder="Buscar producto" aria-label="Buscar producto" style="height:40px;min-width:200px;padding:0 16px;border-radius:999px;border:1px solid var(--border-default);background:var(--surface-card);font:400 14px/1 var(--font-sans);color:var(--text-body)">
+    </div>
+
+    <div style="display:grid;gap:10px">
+      <sc-for list="{{ productos }}" as="p" hint-placeholder-count="8">
+        <div style="{{ p.rowStyle }}">
+          <div style="position:relative;width:60px;height:60px;flex:0 0 auto;border-radius:14px;overflow:hidden;background:repeating-linear-gradient(135deg,var(--crema-100) 0 8px,var(--crema-200) 8px 16px)">
+            <sc-if value="{{ p.hasFoto }}" hint-placeholder-val="{{ false }}">
+              <img src="{{ p.foto }}" alt="" style="width:100%;height:100%;object-fit:cover">
+            </sc-if>
+          </div>
+          <div style="flex:1 1 180px;min-width:0;display:grid;gap:3px">
+            <span style="font:400 18px/1.2 var(--font-display);color:var(--ink-900)">{{ p.nombre }}</span>
+            <span style="font-size:12px;font-weight:600;color:var(--morado-600)">{{ p.linea }}{{ p.etiqueta }}</span>
+          </div>
+          <label style="display:flex;align-items:center;gap:6px;height:44px;padding:0 6px 0 14px;border-radius:999px;border:1px solid var(--border-default);background:var(--surface-card)">
+            <span style="font-family:var(--font-mono);font-size:14px;color:var(--text-muted)">$</span>
+            <input type="number" inputMode="numeric" min="0" step="100" value="{{ p.precio }}" onChange="{{ p.onPrecio }}" onBlur="{{ p.onPrecioBlur }}" aria-label="{{ p.precioLabel }}" style="width:84px;height:40px;border:none;background:transparent;font:400 15px/1 var(--font-mono);color:var(--ink-900)">
+          </label>
+          <select value="{{ p.stock }}" onChange="{{ p.onStock }}" aria-label="{{ p.stockLabel }}" style="height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--border-default);background:var(--surface-card);font:600 13px/1 var(--font-sans);color:var(--ink-800);cursor:pointer">
+            <sc-for list="{{ stockOpts }}" as="so" hint-placeholder-count="5">
+              <option value="{{ so.value }}">{{ so.label }}</option>
+            </sc-for>
+          </select>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <button onClick="{{ p.toggleVisible }}" style="{{ p.visStyle }}">{{ p.visLabel }}</button>
+            <button onClick="{{ p.editar }}" style="height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--border-default);background:var(--surface-card);cursor:pointer;font-size:13px;font-weight:600;color:var(--ink-800)">Editar</button>
+            <sc-if value="{{ p.noConfirma }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ p.borrar }}" style="height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--border-default);background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:var(--granate-500)">Eliminar</button>
+            </sc-if>
+            <sc-if value="{{ p.confirmando }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ p.confirmarBorrar }}" style="height:40px;padding:0 14px;border-radius:999px;border:none;background:var(--granate-500);cursor:pointer;font-size:13px;font-weight:600;color:var(--crema-50)">Sí, eliminar</button>
+              <button onClick="{{ p.cancelarBorrar }}" style="height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--border-default);background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink-800)">No</button>
+            </sc-if>
+          </div>
+        </div>
+      </sc-for>
+      <sc-if value="{{ sinProductos }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:36px 24px;border-radius:22px;background:var(--crema-100);border:1px solid var(--border-subtle);text-align:center;font-size:14px;color:var(--text-muted)">No hay productos con ese filtro.</div>
+      </sc-if>
+    </div>
+  </div>
+</sc-if>
+
+<!-- ========== CAJAS ========== -->
+<sc-if value="{{ esCajas }}" hint-placeholder-val="{{ false }}">
+  <div style="display:grid;gap:18px;max-width:720px">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px">
+      <div style="display:grid;gap:6px">
+        <h1 style="font-family:var(--font-display);font-size:clamp(30px,5vw,44px);line-height:1.04;letter-spacing:-.02em;margin:0;color:var(--ink-900)">Precios de cajas</h1>
+        <span style="font-size:13px;color:var(--text-muted)">Deja el precio vacío para mostrar «Por confirmar» y cotizar por WhatsApp.</span>
+      </div>
+      <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" variant="ghost" size="sm" onClick="{{ restaurarCajas }}" hint-size="170px,36px">Restaurar original</x-import>
+    </div>
+    <div style="padding:8px 22px;border-radius:22px;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-xs)">
+      <sc-for list="{{ cajas }}" as="cj" hint-placeholder-count="7">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-subtle)">
+          <span style="flex:1;min-width:140px;font:400 19px/1.2 var(--font-display);color:var(--ink-900)">{{ cj.label }}</span>
+          <span style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted);min-width:110px">{{ cj.porUnidad }}</span>
+          <label style="display:flex;align-items:center;gap:6px;height:44px;padding:0 6px 0 14px;border-radius:999px;border:1px solid var(--border-default);background:var(--surface-card)">
+            <span style="font-family:var(--font-mono);font-size:14px;color:var(--text-muted)">$</span>
+            <input type="number" inputMode="numeric" min="0" step="500" value="{{ cj.precio }}" onChange="{{ cj.onPrecio }}" onBlur="{{ cj.onBlur }}" placeholder="Por confirmar" aria-label="{{ cj.aria }}" style="width:120px;height:40px;border:none;background:transparent;font:400 15px/1 var(--font-mono);color:var(--ink-900)">
+          </label>
+        </div>
+      </sc-for>
+    </div>
+    <span style="font-size:12px;color:var(--text-muted)">Los recargos por cookie Premium o Equilibrio dentro de una caja (+$1.500) se mantienen.</span>
+  </div>
+</sc-if>
+
+<!-- ========== CLUB ========== -->
+<sc-if value="{{ esClub }}" hint-placeholder-val="{{ false }}">
+  <div style="display:grid;gap:20px">
+    <div style="display:grid;gap:6px">
+      <h1 style="font-family:var(--font-display);font-size:clamp(30px,5vw,44px);line-height:1.04;letter-spacing:-.02em;margin:0;color:var(--ink-900)">Club Cookie.co</h1>
+      <span style="font-size:13px;color:var(--text-muted);max-width:62ch">Aquí se gestiona todo el saldo del Club. Confirma los pagos de membresía: al confirmar, el RUT queda activo con {{ saldoInicial }} de saldo por un año y el cliente lo canjea en la tienda.</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,180px),1fr));gap:12px">
+      <sc-for list="{{ clubKpis }}" as="k" hint-placeholder-count="4">
+        <div style="padding:18px 20px;border-radius:22px;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-xs);display:grid;gap:6px">
+          <span style="font:600 11px/1.2 var(--font-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted)">{{ k.t }}</span>
+          <span style="font-family:var(--font-mono);font-size:24px;color:var(--ink-900)">{{ k.v }}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px;align-items:start">
+      <div style="padding:22px;border-radius:22px;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-xs);display:grid;gap:4px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span style="font:400 20px/1.2 var(--font-display);color:var(--ink-900)">Pagos por confirmar</span>
+          <sc-if value="{{ hayPendientes }}" hint-placeholder-val="{{ false }}">
+            <span style="min-width:24px;height:24px;padding:0 8px;border-radius:999px;background:var(--status-warning-bg);color:var(--status-warning);font-family:var(--font-mono);font-size:12px;display:grid;place-items:center">{{ nPendientes }}</span>
+          </sc-if>
+        </div>
+        <sc-if value="{{ sinPendientes }}" hint-placeholder-val="{{ true }}">
+          <span style="font-size:14px;color:var(--text-muted);padding:8px 0">No hay solicitudes pendientes.</span>
+        </sc-if>
+        <sc-for list="{{ pendientes }}" as="pe" hint-placeholder-count="0">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:14px 0;border-top:1px solid var(--border-subtle)">
+            <div style="flex:1;min-width:160px;display:grid;gap:3px">
+              <span style="font-size:15px;font-weight:600;color:var(--ink-900)">{{ pe.nombre }}</span>
+              <span style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">RUT {{ pe.rut }} · {{ pe.tel }}</span>
+              <span style="font-size:12px;color:var(--text-muted)">Solicitado el {{ pe.fecha }}</span>
+            </div>
+            <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" size="sm" onClick="{{ pe.confirmar }}" hint-size="150px,36px">Confirmar pago</x-import>
+            <button onClick="{{ pe.rechazar }}" style="height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--border-default);background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:var(--granate-500)">Rechazar</button>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="padding:22px;border-radius:22px;background:var(--grad-vitrina);border:1px solid var(--border-subtle);display:grid;gap:12px">
+        <span style="font:400 20px/1.2 var(--font-display);color:var(--ink-900)">Registrar pago recibido</span>
+        <span style="font-size:13px;line-height:1.6;color:var(--text-muted)">Para pagos que llegaron por WhatsApp sin solicitud en la web. Activa la membresía al instante.</span>
+        <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Input" label="RUT" placeholder="12.345.678-5" value="{{ manual.rut }}" onChange="{{ onM_rut }}" error="{{ manualErr.rut }}" hint-size="100%,72px"></x-import>
+        <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Input" label="Nombre y apellido" value="{{ manual.nombre }}" onChange="{{ onM_nombre }}" error="{{ manualErr.nombre }}" hint-size="100%,72px"></x-import>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:12px">
+          <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Input" label="Teléfono" type="tel" value="{{ manual.telefono }}" onChange="{{ onM_telefono }}" hint-size="100%,72px"></x-import>
+          <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Input" label="Cumpleaños" type="date" value="{{ manual.cumple }}" onChange="{{ onM_cumple }}" hint-size="100%,72px"></x-import>
+        </div>
+        <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" fullWidth="{{ true }}" onClick="{{ registrarManual }}" hint-size="100%,44px">{{ manualLabel }}</x-import>
+      </div>
+    </div>
+
+    <div style="padding:22px;border-radius:22px;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-xs);display:grid;gap:4px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font:400 20px/1.2 var(--font-display);color:var(--ink-900)">Compras de socios por aplicar</span>
+        <sc-if value="{{ hayPorAplicar }}" hint-placeholder-val="{{ false }}">
+          <span style="min-width:24px;height:24px;padding:0 8px;border-radius:999px;background:var(--status-warning-bg);color:var(--status-warning);font-family:var(--font-mono);font-size:12px;display:grid;place-items:center">{{ nPorAplicar }}</span>
+        </sc-if>
+      </div>
+      <span style="font-size:13px;line-height:1.6;color:var(--text-muted);max-width:62ch;margin-bottom:6px">La web no mueve el saldo. Cuando confirmes un pedido, aplícalo aquí: se descuenta el saldo usado y se suma el 10% de la compra.</span>
+      <sc-if value="{{ sinPorAplicar }}" hint-placeholder-val="{{ true }}">
+        <span style="font-size:14px;color:var(--text-muted);padding:8px 0">No hay compras de socios pendientes.</span>
+      </sc-if>
+      <sc-for list="{{ porAplicar }}" as="pa" hint-placeholder-count="0">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:14px 0;border-top:1px solid var(--border-subtle)">
+          <div style="flex:1;min-width:180px;display:grid;gap:3px">
+            <span style="font-size:15px;font-weight:600;color:var(--ink-900)">{{ pa.nombre }}</span>
+            <span style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">{{ pa.numero }} · RUT {{ pa.rut }} · {{ pa.fecha }}</span>
+          </div>
+          <div style="display:grid;gap:2px;text-align:right;font-family:var(--font-mono);font-size:13px">
+            <span style="color:var(--ink-900)">Total {{ pa.total }}</span>
+            <span style="color:var(--granate-500)">{{ pa.usa }}</span>
+            <span style="color:var(--sage-500)">{{ pa.suma }}</span>
+          </div>
+          <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" size="sm" onClick="{{ pa.aplicar }}" hint-size="140px,36px">Aplicar al saldo</x-import>
+          <button onClick="{{ pa.omitir }}" style="height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--border-default);background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink-800)">Omitir</button>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="padding:22px;border-radius:22px;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-xs);display:grid;gap:4px">
+      <span style="font:400 20px/1.2 var(--font-display);color:var(--ink-900);margin-bottom:8px">Socios</span>
+      <sc-if value="{{ sinSocios }}" hint-placeholder-val="{{ true }}">
+        <span style="font-size:14px;color:var(--text-muted);padding:8px 0">Todavía no hay socios activos.</span>
+      </sc-if>
+      <sc-for list="{{ socios }}" as="so" hint-placeholder-count="0">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:14px 0;border-top:1px solid var(--border-subtle)">
+          <div style="flex:1;min-width:170px;display:grid;gap:3px">
+            <span style="font-size:15px;font-weight:600;color:var(--ink-900)">{{ so.nombre }}</span>
+            <span style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">RUT {{ so.rut }}</span>
+          </div>
+          <span style="{{ so.estadoStyle }}">{{ so.estado }}</span>
+          <span style="font-size:13px;color:var(--text-muted);min-width:130px">Vence {{ so.vence }}</span>
+          <span style="font-size:13px;color:var(--text-muted);min-width:110px">{{ so.cumple }}</span>
+          <span style="font-family:var(--font-mono);font-size:15px;color:var(--ink-900);min-width:80px;text-align:right">{{ so.saldo }}</span>
+          <sc-if value="{{ so.noAjusta }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ so.ajustar }}" style="height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--border-default);background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:var(--morado-700)">Ajustar saldo</button>
+          </sc-if>
+          <sc-if value="{{ so.noConfirma }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ so.baja }}" style="height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--border-default);background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:var(--granate-500)">Dar de baja</button>
+          </sc-if>
+          <sc-if value="{{ so.confirmando }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ so.confirmarBaja }}" style="height:36px;padding:0 14px;border-radius:999px;border:none;background:var(--granate-500);cursor:pointer;font-size:13px;font-weight:600;color:var(--crema-50)">Sí, dar de baja</button>
+            <button onClick="{{ so.cancelarBaja }}" style="height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--border-default);background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink-800)">No</button>
+          </sc-if>
+          <sc-if value="{{ so.ajustando }}" hint-placeholder-val="{{ false }}">
+            <div style="flex-basis:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:10px;align-items:end;padding:14px;border-radius:16px;background:var(--lila-50)">
+              <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Input" label="Monto (+ suma, − descuenta)" placeholder="-3500" inputMode="numeric" value="{{ ajuste.monto }}" onChange="{{ onAj_monto }}" error="{{ ajusteErr }}" hint-size="100%,72px"></x-import>
+              <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Input" label="Motivo" placeholder="Compra por WhatsApp" value="{{ ajuste.motivo }}" onChange="{{ onAj_motivo }}" hint-size="100%,72px"></x-import>
+              <div style="display:flex;gap:8px">
+                <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" size="sm" onClick="{{ guardarAjuste }}" hint-size="110px,36px">Guardar</x-import>
+                <button onClick="{{ so.cancelarAjuste }}" style="height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--border-default);background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink-800)">Cancelar</button>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</sc-if>
+
+<!-- ========== AJUSTES ========== -->
+<sc-if value="{{ esAjustes }}" hint-placeholder-val="{{ false }}">
+  <div style="display:grid;gap:18px;max-width:520px">
+    <h1 style="font-family:var(--font-display);font-size:clamp(30px,5vw,44px);line-height:1.04;letter-spacing:-.02em;margin:0;color:var(--ink-900)">Ajustes</h1>
+    <div style="padding:22px;border-radius:22px;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-xs);display:grid;gap:12px">
+      <span style="font:400 20px/1.2 var(--font-display);color:var(--ink-900)">Cambiar PIN de acceso</span>
+      <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Input" label="PIN nuevo" type="password" inputMode="numeric" value="{{ pinNuevo }}" onChange="{{ onPinNuevo }}" error="{{ pinNuevoErr }}" hint="Mínimo 4 dígitos." hint-size="100%,88px"></x-import>
+      <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" onClick="{{ cambiarPin }}" hint-size="150px,44px">Guardar PIN</x-import>
+    </div>
+  </div>
+</sc-if>
+
+</main>
+</sc-if>
+
+<sc-if value="{{ toastVisible }}" hint-placeholder-val="{{ false }}">
+  <div role="status" style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:60;pointer-events:none;max-width:min(92vw,420px);padding:13px 20px;border-radius:999px;background:var(--ink-900);color:var(--crema-50);box-shadow:var(--shadow-lg);font-size:14px;text-align:center;animation:cc-rise .26s cubic-bezier(.22,.61,.36,1)">{{ toast }}</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    auth: false, pin: '', pinErr: '', tab: 'metricas',
+    cookies: [], cajas: [], socios: [], pedidos: [], resenas: [], listo: false,
+    form: null, formErr: {}, borrar: null, filtro: 'todas', busca: '',
+    manual: { rut: '', nombre: '', telefono: '', cumple: '' }, manualErr: {}, bajaRut: null, ajuste: { rut: null, monto: '', motivo: '' }, ajusteErr: '',
+    pinNuevo: '', pinNuevoErr: '', toast: null,
+  };
+  K = { cookies: 'cookieco.admin.cookies', cajas: 'cookieco.admin.cajas', socios: 'cookieco.club.socios', ped: 'cookieco.pedidos', res: 'cookieco.resenas', pin: 'cookieco.admin.pin' };
+
+  componentDidMount() {
+    try { if (sessionStorage.getItem('cookieco.admin.ok') === '1') this.setState({ auth: true }); } catch (e) {}
+    const listo = D => { this.D = D; this.recargar(); };
+    if (window.COOKIECO_DATA) listo(window.COOKIECO_DATA);
+    else window.addEventListener('cookieco-data', () => listo(window.COOKIECO_DATA), { once: true });
+    this.onStorage = e => { if (this.D && (!e.key || /^cookieco\./.test(e.key))) this.recargar(); };
+    window.addEventListener('storage', this.onStorage);
+  }
+  componentWillUnmount() { window.removeEventListener('storage', this.onStorage); clearTimeout(this.tT); }
+
+  leer(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
+  guardar(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); return true; }
+    catch (e) { this.avisar('No queda espacio para guardar. Usa fotos más livianas.'); return false; }
+  }
+  copia(x) { return JSON.parse(JSON.stringify(x)); }
+  recargar() {
+    const cs = this.leer(this.K.cookies, null), cj = this.leer(this.K.cajas, null);
+    this.setState({
+      listo: true,
+      cookies: Array.isArray(cs) ? cs : this.copia(this.D.COOKIES),
+      cajas: Array.isArray(cj) ? cj : this.copia(this.D.CAJAS),
+      socios: this.leer(this.K.socios, []), pedidos: this.leer(this.K.ped, []), resenas: this.leer(this.K.res, []),
+    });
+  }
+  avisar = t => { clearTimeout(this.tT); this.setState({ toast: t }); this.tT = setTimeout(() => this.setState({ toast: null }), 2400); };
+  clp(n) { return '$' + Math.round(Number(n || 0)).toLocaleString('es-CL'); }
+
+  /* ---------- acceso ---------- */
+  entrar = () => {
+    const pin = this.leer(this.K.pin, null) || '2026';
+    if (String(this.state.pin).trim() !== String(pin)) return this.setState({ pinErr: 'PIN incorrecto.' });
+    try { sessionStorage.setItem('cookieco.admin.ok', '1'); } catch (e) {}
+    this.setState({ auth: true, pin: '', pinErr: '' });
+  };
+  salir = () => { try { sessionStorage.removeItem('cookieco.admin.ok'); } catch (e) {} this.setState({ auth: false }); };
+  cambiarPin = () => {
+    const p = String(this.state.pinNuevo).trim();
+    if (!/^\d{4,8}$/.test(p)) return this.setState({ pinNuevoErr: 'Usa entre 4 y 8 dígitos.' });
+    this.guardar(this.K.pin, p);
+    this.setState({ pinNuevo: '', pinNuevoErr: '' });
+    this.avisar('PIN actualizado.');
+  };
+
+  /* ---------- RUT ---------- */
+  rutLimpio(r) { return String(r || '').replace(/[^0-9kK]/g, '').toUpperCase(); }
+  rutValido(r) {
+    const c = this.rutLimpio(r);
+    if (c.length < 8 || c.length > 9) return false;
+    const cuerpo = c.slice(0, -1), dv = c.slice(-1);
+    if (!/^\d+$/.test(cuerpo)) return false;
+    let s = 0, m = 2;
+    for (let i = cuerpo.length - 1; i >= 0; i--) { s += Number(cuerpo[i]) * m; m = m === 7 ? 2 : m + 1; }
+    const x = 11 - (s % 11);
+    return (x === 11 ? '0' : x === 10 ? 'K' : String(x)) === dv;
+  }
+  rutFormato(r) { const c = this.rutLimpio(r); if (c.length < 2) return c; return c.slice(0, -1).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + '-' + c.slice(-1); }
+
+  /* ---------- productos ---------- */
+  setCookies(cookies, msg) { if (this.guardar(this.K.cookies, cookies)) { this.setState({ cookies }); if (msg) this.avisar(msg); } }
+  campo(slug, k, v, msg) { this.setCookies(this.state.cookies.map(c => c.slug === slug ? Object.assign({}, c, { [k]: v }) : c), msg); }
+  slugify(t) {
+    return String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'producto';
+  }
+  nuevo = () => this.setState({ formErr: {}, form: { modo: 'nuevo', slug: null, nombre: '', linea: 'tradicional', precio: '3500', stock: 'disponible', corta: '', ingredientes: '', alergenos: '', perfil: [], destacado: false, foto: null } });
+  editar = c => this.setState({ formErr: {}, form: {
+    modo: 'editar', slug: c.slug, nombre: c.nombre, linea: c.linea, precio: String(c.precio), stock: c.stock || 'disponible', corta: c.corta || '',
+    ingredientes: (c.ingredientes || []).join(', '), alergenos: (c.alergenos || []).join(', '), perfil: (c.perfil || []).slice(), destacado: !!c.destacado, foto: c.foto || null,
+  } });
+  cerrarForm = () => this.setState({ form: null, formErr: {} });
+  setForm = (k, v) => { const f = Object.assign({}, this.state.form); f[k] = v; const e = Object.assign({}, this.state.formErr); delete e[k]; this.setState({ form: f, formErr: e }); };
+  subirFoto = e => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const s = Math.min(1, 640 / Math.max(img.width, img.height));
+        const cv = document.createElement('canvas');
+        cv.width = Math.round(img.width * s); cv.height = Math.round(img.height * s);
+        cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+        this.setForm('foto', cv.toDataURL('image/jpeg', 0.82));
+      };
+      img.src = rd.result;
+    };
+    rd.readAsDataURL(file);
+    e.target.value = '';
+  };
+  guardarForm = () => {
+    const f = this.state.form, e = {};
+    const precio = parseInt(String(f.precio).replace(/\D/g, ''), 10);
+    if (f.nombre.trim().length < 3) e.nombre = 'Escribe un nombre de al menos 3 letras.';
+    if (!precio || precio < 500) e.precio = 'Precio mínimo $500.';
+    if (f.corta.trim().length < 10) e.corta = 'Describe el producto en una frase.';
+    if (Object.keys(e).length) return this.setState({ formErr: e });
+    const lista = s => s.split(',').map(x => x.trim()).filter(Boolean);
+    const datos = {
+      nombre: f.nombre.trim(), linea: f.linea, precio, stock: f.stock, corta: f.corta.trim(),
+      ingredientes: lista(f.ingredientes), alergenos: lista(f.alergenos), perfil: f.perfil.length ? f.perfil : ['cremoso'],
+      destacado: f.destacado, foto: f.foto || null,
+    };
+    let cookies;
+    if (f.modo === 'editar') {
+      cookies = this.state.cookies.map(c => c.slug === f.slug ? Object.assign({}, c, datos) : c);
+    } else {
+      let slug = this.slugify(datos.nombre), n = 2;
+      while (this.state.cookies.some(c => c.slug === slug)) slug = this.slugify(datos.nombre) + '-' + n++;
+      cookies = this.state.cookies.concat([Object.assign({ slug, dulzor: 3 }, datos)]);
+    }
+    if (this.guardar(this.K.cookies, cookies)) {
+      this.setState({ cookies, form: null, formErr: {} });
+      this.avisar(f.modo === 'editar' ? 'Producto actualizado en la tienda.' : 'Producto agregado a la tienda.');
+    }
+  };
+  restaurarCatalogo = () => { try { localStorage.removeItem(this.K.cookies); } catch (e) {} this.setState({ cookies: this.copia(this.D.COOKIES), form: null }); this.avisar('Catálogo original restaurado.'); };
+
+  /* ---------- cajas ---------- */
+  setCaja(size, v) {
+    const n = parseInt(String(v).replace(/\D/g, ''), 10);
+    const cajas = this.state.cajas.map(c => c.size === size ? { size, precio: n > 0 ? n : null } : c);
+    if (this.guardar(this.K.cajas, cajas)) this.setState({ cajas });
+  }
+  restaurarCajas = () => { try { localStorage.removeItem(this.K.cajas); } catch (e) {} this.setState({ cajas: this.copia(this.D.CAJAS) }); this.avisar('Precios originales restaurados.'); };
+
+  /* ---------- club ---------- */
+  setSocios(socios, msg) { if (this.guardar(this.K.socios, socios)) { this.setState({ socios }); if (msg) this.avisar(msg); } }
+  activar(so) {
+    const C = this.D.CLUB, hoy = new Date(), vence = new Date();
+    vence.setMonth(vence.getMonth() + C.vigenciaMeses);
+    return Object.assign({}, so, {
+      estado: 'activo', pagado: hoy.toISOString(), vence: vence.toISOString(),
+      saldo: (so.saldo || 0) + C.saldoInicial,
+      movimientos: [{ t: 'Saldo de bienvenida', v: C.saldoInicial, f: hoy.toLocaleDateString('es-CL') }].concat(so.movimientos || []),
+    });
+  }
+  confirmarPago = rut => this.setSocios(this.state.socios.map(s => s.rut === rut ? this.activar(s) : s), 'Pago confirmado. El cliente ya puede canjear con su RUT.');
+  rechazar = rut => this.setSocios(this.state.socios.filter(s => s.rut !== rut), 'Solicitud rechazada.');
+  setPedidos(peds) { if (this.guardar(this.K.ped, peds)) this.setState({ pedidos: peds }); }
+  aplicarPedido = num => {
+    const p = this.state.pedidos.find(x => x.numero === num); if (!p) return;
+    const so = this.state.socios.find(x => x.rut === p.rut);
+    if (!so) return this.avisar('Ese RUT ya no es socio.');
+    const gana = Math.round((p.total || 0) * this.D.CLUB.acumulacion), f = new Date().toLocaleDateString('es-CL');
+    const movs = [{ t: 'Acumulado · ' + p.numero, v: gana, f }];
+    if (p.saldoUsado) movs.push({ t: 'Usado · ' + p.numero, v: -p.saldoUsado, f });
+    const nso = Object.assign({}, so, { saldo: Math.max(0, (so.saldo || 0) - (p.saldoUsado || 0)) + gana, movimientos: movs.concat(so.movimientos || []) });
+    this.setPedidos(this.state.pedidos.map(x => x.numero === num ? Object.assign({}, x, { clubPendiente: false, clubAplicado: true, acumulado: gana }) : x));
+    this.setSocios(this.state.socios.map(x => x.rut === so.rut ? nso : x), 'Saldo de ' + so.nombre.split(' ')[0] + ' actualizado: ' + this.clp(nso.saldo) + '.');
+  };
+  omitirPedido = num => { this.setPedidos(this.state.pedidos.map(x => x.numero === num ? Object.assign({}, x, { clubPendiente: false, clubOmitido: true }) : x)); this.avisar('Pedido omitido. El saldo no cambió.'); };
+  setAjuste = (k, v) => this.setState({ ajuste: Object.assign({}, this.state.ajuste, { [k]: v }), ajusteErr: '' });
+  guardarAjuste = () => {
+    const a = this.state.ajuste, n = parseInt(String(a.monto).replace(/[^0-9-]/g, ''), 10);
+    if (!n) return this.setState({ ajusteErr: 'Escribe un monto. Usa el signo menos para descontar.' });
+    const so = this.state.socios.find(x => x.rut === a.rut); if (!so) return;
+    const nso = Object.assign({}, so, { saldo: Math.max(0, (so.saldo || 0) + n), movimientos: [{ t: a.motivo.trim() || 'Ajuste manual', v: n, f: new Date().toLocaleDateString('es-CL') }].concat(so.movimientos || []) });
+    this.setState({ ajuste: { rut: null, monto: '', motivo: '' } });
+    this.setSocios(this.state.socios.map(x => x.rut === so.rut ? nso : x), 'Saldo ajustado: ' + this.clp(nso.saldo) + '.');
+  };
+  darBaja = rut => { this.setState({ bajaRut: null }); this.setSocios(this.state.socios.filter(s => s.rut !== rut), 'Socio dado de baja.'); };
+  setManual = (k, v) => { const m = Object.assign({}, this.state.manual); m[k] = v; const e = Object.assign({}, this.state.manualErr); delete e[k]; this.setState({ manual: m, manualErr: e }); };
+  registrarManual = () => {
+    const m = this.state.manual, e = {};
+    if (!this.rutValido(m.rut)) e.rut = 'RUT no válido. Revisa el dígito verificador.';
+    if (m.nombre.trim().length < 3) e.nombre = 'Escribe el nombre completo.';
+    const rut = this.rutLimpio(m.rut);
+    const prev = this.state.socios.find(s => s.rut === rut);
+    if (!e.rut && prev && prev.estado === 'activo' && new Date(prev.vence) > new Date()) e.rut = 'Este RUT ya tiene una membresía activa.';
+    if (Object.keys(e).length) return this.setState({ manualErr: e });
+    const base = prev || { rut, movimientos: [], saldo: 0 };
+    const so = this.activar(Object.assign({}, base, { rut, nombre: m.nombre.trim(), telefono: m.telefono.replace(/\D/g, ''), cumple: m.cumple || base.cumple || '', solicitado: base.solicitado || new Date().toISOString(), saldo: prev && prev.estado === 'pendiente' ? prev.saldo || 0 : 0 }));
+    const socios = prev ? this.state.socios.map(s => s.rut === rut ? so : s) : [so].concat(this.state.socios);
+    this.setSocios(socios, 'Membresía activada para ' + this.rutFormato(rut) + '.');
+    this.setState({ manual: { rut: '', nombre: '', telefono: '', cumple: '' }, manualErr: {} });
+  };
+
+  /* ---------- métricas ---------- */
+  diaKey(p) {
+    let d = null;
+    if (p.creadoISO) d = new Date(p.creadoISO);
+    else { const m = String(p.fechaCreacion || '').match(/(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})/); if (m) d = new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1])); }
+    if (!d || isNaN(d)) return null;
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  chip(on) {
+    return 'height:38px;padding:0 16px;border-radius:999px;cursor:pointer;white-space:nowrap;font-family:var(--font-sans);font-size:13px;font-weight:600;transition:all .16s cubic-bezier(.22,.61,.36,1);' +
+      (on ? 'background:var(--ink-900);color:var(--crema-50);border:1px solid var(--ink-900);' : 'background:transparent;color:var(--text-body);border:1px solid var(--border-default);');
+  }
+
+  renderVals() {
+    const s = this.state, CLP = n => this.clp(n);
+    const v = {
+      auth: s.auth, noAuth: !s.auth, pin: s.pin, pinErr: s.pinErr,
+      onPin: e => this.setState({ pin: e.target.value, pinErr: '' }),
+      pinEnter: e => { if (e.key === 'Enter') this.entrar(); },
+      entrar: this.entrar, salir: this.salir,
+      toast: s.toast, toastVisible: !!s.toast,
+      tabs: [['metricas', 'Métricas'], ['productos', 'Productos'], ['cajas', 'Cajas'], ['club', 'Club'], ['ajustes', 'Ajustes']].map(x => ({
+        label: x[1], set: () => this.setState({ tab: x[0], form: null }),
+        style: 'height:38px;padding:0 18px;border-radius:999px;border:none;cursor:pointer;white-space:nowrap;font-family:var(--font-sans);font-size:13px;font-weight:600;' +
+          (s.tab === x[0] ? 'background:var(--ink-900);color:var(--crema-50);' : 'background:transparent;color:var(--text-muted);'),
+      })),
+      esMetricas: s.tab === 'metricas', esProductos: s.tab === 'productos', esCajas: s.tab === 'cajas', esClub: s.tab === 'club', esAjustes: s.tab === 'ajustes',
+      pinNuevo: s.pinNuevo, pinNuevoErr: s.pinNuevoErr, onPinNuevo: e => this.setState({ pinNuevo: e.target.value, pinNuevoErr: '' }), cambiarPin: this.cambiarPin,
+    };
+    if (!this.D) return v;
+    const D = this.D;
+    const nombreDe = slug => { const c = s.cookies.find(x => x.slug === slug) || D.COOKIES.find(x => x.slug === slug); return c ? c.nombre : slug; };
+
+    /* métricas */
+    const peds = s.pedidos;
+    const ventas = peds.reduce((a, p) => a + (p.total || 0), 0);
+    let nCookies = 0; const porSabor = {};
+    const suma = (k, n) => { porSabor[k] = (porSabor[k] || 0) + n; };
+    peds.forEach(p => (p.items || []).forEach(i => {
+      if (i.tipo === 'box') { nCookies += (i.size || 0) * i.qty; if (i.itemsBox) Object.keys(i.itemsBox).forEach(k => suma(k, i.itemsBox[k] * i.qty)); }
+      else { nCookies += i.qty; if (i.slug) suma(i.slug, i.qty); }
+    }));
+    const sociosAct = s.socios.filter(x => x.estado === 'activo' && new Date(x.vence) > new Date());
+    const prom = s.resenas.length ? (s.resenas.reduce((a, r) => a + r.estrellas, 0) / s.resenas.length).toFixed(1) : '—';
+    v.kpis = [
+      { t: 'Ventas', v: CLP(ventas), n: peds.length + (peds.length === 1 ? ' pedido' : ' pedidos') },
+      { t: 'Ticket promedio', v: peds.length ? CLP(ventas / peds.length) : '—', n: 'Total / pedidos' },
+      { t: 'Cookies vendidas', v: String(nCookies), n: 'Sueltas y en cajas' },
+      { t: 'Con regalo', v: peds.length ? Math.round(peds.filter(p => p.regalo).length / peds.length * 100) + '%' : '—', n: 'Presentación + tarjeta' },
+      { t: 'Socios activos', v: String(sociosAct.length), n: CLP(sociosAct.length * D.CLUB.precio) + ' en membresías' },
+      { t: 'Calificación', v: prom, n: s.resenas.length + (s.resenas.length === 1 ? ' comentario' : ' comentarios') },
+    ];
+    v.hayPedidos = peds.length > 0; v.sinPedidos = peds.length === 0;
+    const top = Object.keys(porSabor).map(k => ({ k, n: porSabor[k] })).sort((a, b) => b.n - a.n).slice(0, 8);
+    const maxS = top.length ? top[0].n : 1;
+    v.topSabores = top.map(x => ({ nombre: nombreDe(x.k), n: x.n + (x.n === 1 ? ' unidad' : ' unidades'), barra: 'height:100%;width:' + Math.max(4, Math.round(x.n / maxS * 100)) + '%;background:var(--accent-primary);border-radius:999px' }));
+    const hoy = new Date(); const dias = [];
+    for (let i = 13; i >= 0; i--) { const d = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - i); dias.push({ key: d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'), d, total: 0 }); }
+    peds.forEach(p => { const k = this.diaKey(p); const x = dias.find(y => y.key === k); if (x) x.total += p.total || 0; });
+    const maxD = Math.max(1, ...dias.map(x => x.total));
+    v.ventas14 = CLP(dias.reduce((a, x) => a + x.total, 0));
+    v.dias = dias.map(x => ({
+      label: String(x.d.getDate()), titulo: x.d.toLocaleDateString('es-CL') + ' · ' + CLP(x.total),
+      barra: 'width:100%;height:' + (x.total ? Math.max(4, Math.round(x.total / maxD * 100)) : 2) + '%;border-radius:6px 6px 2px 2px;background:' + (x.total ? 'var(--accent-primary)' : 'var(--crema-200)'),
+    }));
+    const mix = {}; peds.forEach(p => { const t = (p.entrega && p.entrega.tipo) || 'Sin dato'; mix[t] = (mix[t] || 0) + 1; });
+    v.mix = Object.keys(mix).map(t => ({ t, v: mix[t] + ' · ' + Math.round(mix[t] / peds.length * 100) + '%', barra: 'height:100%;width:' + Math.round(mix[t] / peds.length * 100) + '%;background:var(--lila-300);border-radius:999px' }));
+    v.ultimos = peds.slice(0, 8).map(p => ({ numero: p.numero, cliente: (p.cliente && p.cliente.nombre) || '—', entrega: (p.entrega && p.entrega.tipo) || '—', fecha: p.fechaCreacion, total: CLP(p.total) }));
+
+    /* productos */
+    const LN = { tradicional: 'Clásica', premium: 'Premium', equilibrio: 'Equilibrio' };
+    v.stockOpts = Object.keys(D.STOCK_LABEL).map(k => ({ value: k, label: D.STOCK_LABEL[k].label }));
+    v.lineaOpts = Object.keys(LN).map(k => ({ value: k, label: LN[k] }));
+    v.filtros = [['todas', 'Todas'], ['tradicional', 'Clásicas'], ['premium', 'Premium'], ['equilibrio', 'Equilibrio']].map(x => ({ label: x[1], style: this.chip(s.filtro === x[0]), set: () => this.setState({ filtro: x[0] }) }));
+    v.busca = s.busca; v.onBusca = e => this.setState({ busca: e.target.value });
+    const q = s.busca.trim().toLowerCase();
+    const lista = s.cookies.filter(c => (s.filtro === 'todas' || c.linea === s.filtro) && (!q || c.nombre.toLowerCase().indexOf(q) >= 0));
+    v.productosResumen = s.cookies.length + ' productos · ' + s.cookies.filter(c => c.oculto).length + ' ocultos · los cambios se aplican al instante en la tienda';
+    v.sinProductos = lista.length === 0;
+    v.productos = lista.map(c => ({
+      nombre: c.nombre, linea: LN[c.linea] || c.linea, etiqueta: (c.destacado ? ' · Destacado' : '') + (c.oculto ? ' · Oculto' : ''),
+      foto: c.foto, hasFoto: !!c.foto, precio: String(c.precio), stock: c.stock || 'disponible',
+      precioLabel: 'Precio de ' + c.nombre, stockLabel: 'Disponibilidad de ' + c.nombre,
+      onPrecio: e => { const n = parseInt(String(e.target.value).replace(/\D/g, ''), 10); this.campo(c.slug, 'precio', n > 0 ? n : 0); },
+      onPrecioBlur: () => this.avisar('Precio de ' + c.nombre + ': ' + CLP(c.precio)),
+      onStock: e => this.campo(c.slug, 'stock', e.target.value, c.nombre + ': ' + D.STOCK_LABEL[e.target.value].label.toLowerCase()),
+      visLabel: c.oculto ? 'Mostrar' : 'Ocultar',
+      toggleVisible: () => this.campo(c.slug, 'oculto', !c.oculto, c.oculto ? c.nombre + ' vuelve a la tienda.' : c.nombre + ' oculta de la tienda.'),
+      visStyle: 'height:40px;padding:0 14px;border-radius:999px;cursor:pointer;font-size:13px;font-weight:600;' + (c.oculto ? 'border:1px solid transparent;background:var(--lila-100);color:var(--morado-700);' : 'border:1px solid var(--border-default);background:var(--surface-card);color:var(--ink-800);'),
+      editar: () => this.editar(c),
+      noConfirma: s.borrar !== c.slug, confirmando: s.borrar === c.slug,
+      borrar: () => this.setState({ borrar: c.slug }), cancelarBorrar: () => this.setState({ borrar: null }),
+      confirmarBorrar: () => { this.setState({ borrar: null }); this.setCookies(s.cookies.filter(x => x.slug !== c.slug), c.nombre + ' eliminada del catálogo.'); },
+      rowStyle: 'display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;padding:14px 16px;border-radius:22px;border:1px solid var(--border-subtle);box-shadow:var(--shadow-xs);' + (c.oculto ? 'background:var(--crema-100);opacity:.72;' : 'background:var(--surface-card);'),
+    }));
+    v.nuevo = this.nuevo; v.restaurarCatalogo = this.restaurarCatalogo;
+    const f = s.form;
+    v.formAbierto = !!f; v.formErr = s.formErr; v.cerrarForm = this.cerrarForm; v.guardarForm = this.guardarForm; v.subirFoto = this.subirFoto;
+    if (f) {
+      v.form = f; v.formTitulo = f.modo === 'editar' ? 'Editar ' + f.nombre : 'Nuevo producto';
+      v.fFoto = f.foto; v.fHasFoto = !!f.foto; v.fSinFoto = !f.foto; v.quitarFoto = () => this.setForm('foto', null);
+      ['nombre', 'linea', 'precio', 'stock', 'corta', 'ingredientes', 'alergenos'].forEach(k => { v['onF_' + k] = e => this.setForm(k, e.target.value); });
+      v.onF_destacado = () => this.setForm('destacado', !f.destacado);
+      v.perfilChips = [['chocolatoso', 'Chocolatosa'], ['cremoso', 'Cremosa'], ['citrico', 'Cítrica'], ['frutal', 'Frutal'], ['crujiente', 'Crujiente']].map(x => ({
+        label: x[1], style: this.chip(f.perfil.indexOf(x[0]) >= 0),
+        toggle: () => this.setForm('perfil', f.perfil.indexOf(x[0]) >= 0 ? f.perfil.filter(y => y !== x[0]) : f.perfil.concat([x[0]])),
+      }));
+    }
+
+    /* cajas */
+    v.cajas = s.cajas.map(c => ({
+      label: 'Caja de ' + c.size, precio: c.precio ? String(c.precio) : '', aria: 'Precio caja de ' + c.size,
+      porUnidad: c.precio ? CLP(c.precio / c.size) + ' c/u' : 'Por confirmar',
+      onPrecio: e => this.setCaja(c.size, e.target.value),
+      onBlur: () => this.avisar('Caja de ' + c.size + ': ' + (c.precio ? CLP(c.precio) : 'por confirmar')),
+    }));
+    v.restaurarCajas = this.restaurarCajas;
+
+    /* club */
+    v.saldoInicial = CLP(D.CLUB.saldoInicial);
+    const pend = s.socios.filter(x => x.estado === 'pendiente');
+    const saldoVivo = sociosAct.reduce((a, x) => a + (x.saldo || 0), 0);
+    v.clubKpis = [
+      { t: 'Socios activos', v: String(sociosAct.length) },
+      { t: 'Pagos por confirmar', v: String(pend.length) },
+      { t: 'Ingresos membresías', v: CLP(s.socios.filter(x => x.pagado).length * D.CLUB.precio) },
+      { t: 'Saldo vigente de socios', v: CLP(saldoVivo) },
+    ];
+    v.hayPendientes = pend.length > 0; v.sinPendientes = pend.length === 0; v.nPendientes = String(pend.length);
+    v.pendientes = pend.map(x => ({
+      nombre: x.nombre, rut: this.rutFormato(x.rut), tel: x.telefono ? '+56 ' + x.telefono : 'sin teléfono',
+      fecha: x.solicitado ? new Date(x.solicitado).toLocaleDateString('es-CL') : '—',
+      confirmar: () => this.confirmarPago(x.rut), rechazar: () => this.rechazar(x.rut),
+    }));
+    const noPend = s.socios.filter(x => x.estado !== 'pendiente');
+    v.sinSocios = noPend.length === 0;
+    v.socios = noPend.map(x => {
+      const vig = new Date(x.vence) > new Date();
+      return {
+        nombre: x.nombre, rut: this.rutFormato(x.rut), saldo: CLP(x.saldo),
+        vence: x.vence ? new Date(x.vence).toLocaleDateString('es-CL') : '—',
+        cumple: x.cumple ? 'Cumple ' + x.cumple.split('-').reverse().slice(0, 2).join('/') : 'Sin cumpleaños',
+        estado: vig ? 'Activo' : 'Vencido',
+        estadoStyle: 'height:24px;display:inline-flex;align-items:center;padding:0 10px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;' + (vig ? 'background:var(--sage-100);color:var(--sage-500);' : 'background:var(--crema-200);color:var(--text-muted);'),
+        noConfirma: s.bajaRut !== x.rut, confirmando: s.bajaRut === x.rut,
+        noAjusta: s.ajuste.rut !== x.rut, ajustando: s.ajuste.rut === x.rut,
+        ajustar: () => this.setState({ ajuste: { rut: x.rut, monto: '', motivo: '' }, ajusteErr: '' }), cancelarAjuste: () => this.setState({ ajuste: { rut: null, monto: '', motivo: '' } }),
+        baja: () => this.setState({ bajaRut: x.rut }), cancelarBaja: () => this.setState({ bajaRut: null }), confirmarBaja: () => this.darBaja(x.rut),
+      };
+    });
+    const porA = s.pedidos.filter(p => p.rut && p.clubPendiente);
+    v.hayPorAplicar = porA.length > 0; v.sinPorAplicar = porA.length === 0; v.nPorAplicar = String(porA.length);
+    v.porAplicar = porA.map(p => ({
+      numero: p.numero, rut: this.rutFormato(p.rut), fecha: p.fechaCreacion || '', nombre: (p.cliente && p.cliente.nombre) || 'Socio',
+      total: CLP(p.total), usa: p.saldoUsado ? 'Usa −' + CLP(p.saldoUsado) : 'No usa saldo',
+      suma: 'Suma +' + CLP(Math.round((p.total || 0) * D.CLUB.acumulacion)),
+      aplicar: () => this.aplicarPedido(p.numero), omitir: () => this.omitirPedido(p.numero),
+    }));
+    v.ajuste = s.ajuste; v.ajusteErr = s.ajusteErr; v.guardarAjuste = this.guardarAjuste;
+    v.onAj_monto = e => this.setAjuste('monto', e.target.value); v.onAj_motivo = e => this.setAjuste('motivo', e.target.value);
+    v.manual = s.manual; v.manualErr = s.manualErr; v.registrarManual = this.registrarManual;
+    v.manualLabel = 'Activar membresía · ' + CLP(D.CLUB.precio);
+    ['rut', 'nombre', 'telefono', 'cumple'].forEach(k => { v['onM_' + k] = e => this.setManual(k, e.target.value); });
+    return v;
+  }
+}
+</script>
+</body>
+</html>

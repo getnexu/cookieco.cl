@@ -1,0 +1,7 @@
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{margin:0;background:var(--surface-page);color:var(--text-body);font:var(--text-body-default);text-wrap:pretty}
+h1,h2,h3{font-family:var(--font-display);font-weight:var(--weight-regular);letter-spacing:var(--track-display);line-height:var(--lh-display);color:var(--text-display);margin:0}
+a{color:var(--text-accent);text-decoration-thickness:1px;text-underline-offset:3px;transition:color var(--dur-fast) var(--ease-boutique)}
+a:hover{color:var(--accent-primary-press)}
+*:focus-visible{outline:none;box-shadow:var(--ring-focus);border-radius:var(--radius-sm)}
+::selection{background:var(--lila-300);color:var(--ink-900)}

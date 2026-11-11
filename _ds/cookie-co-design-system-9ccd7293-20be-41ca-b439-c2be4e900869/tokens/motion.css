@@ -1,0 +1,14 @@
+:root{
+  --ease-boutique:cubic-bezier(.22,.61,.36,1); /* @kind other */
+  --ease-entrance:cubic-bezier(.16,.84,.44,1); /* @kind other */
+  --ease-exit:cubic-bezier(.4,0,.68,.28); /* @kind other */
+  --dur-instant:90ms; /* @kind other */
+  --dur-fast:160ms; /* @kind other */
+  --dur-base:260ms; /* @kind other */
+  --dur-slow:420ms; /* @kind other */
+  --dur-scene:720ms; /* @kind other */
+  --lift-hover:translateY(-2px); /* @kind other */
+  --lift-hover-card:translateY(-6px); /* @kind other */
+  --press-scale:scale(.985); /* @kind other */
+  --tilt-3d:perspective(900px) rotateX(6deg) rotateY(-8deg); /* @kind other */
+}

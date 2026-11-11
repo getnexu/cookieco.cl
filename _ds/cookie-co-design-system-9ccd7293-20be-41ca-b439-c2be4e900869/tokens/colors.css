@@ -1,0 +1,60 @@
+:root{
+  /* ---- Base ramps: warm neutrals ---- */
+  --crema-50:#FDFAF5;--crema-100:#F9F3E9;--crema-200:#F3EADB;
+  --beige-200:#EFE4D3;--beige-300:#E2D2BA;--beige-400:#CDB99E;--beige-500:#B09A7E;
+  /* ---- Base ramps: lila / morado ---- */
+  --lila-50:#F4F0FA;--lila-100:#EBE3F6;--lila-200:#DACDEE;--lila-300:#C4AEE2;--lila-400:#A88BD1;
+  --morado-500:#7A4FB6;--morado-600:#5E3691;--morado-700:#45266C;--morado-900:#2A1544;
+  /* ---- Base ramps: negro (warm ink) ---- */
+  --ink-900:#120F0D;--ink-800:#1E1916;--ink-700:#2E2723;--ink-600:#413833;--ink-500:#574C45;--ink-400:#736660;--ink-300:#8B7D73;--ink-200:#B6A89E;
+  --white:#FFFFFF;
+  /* ---- Semantic scales ---- */
+  --sage-500:#4F7A52;--sage-100:#E4EDE2;
+  --ambar-500:#C98A3C;--ambar-100:#F7EBD8;
+  --granate-500:#A33A3A;--granate-100:#F6E3E1;
+
+  /* ---- Semantic aliases: surfaces ---- */
+  --surface-page:var(--crema-50);
+  --surface-card:var(--white);
+  --surface-sunken:var(--crema-100);
+  --surface-accent:var(--lila-100);
+  --surface-inverse:var(--ink-900);
+  --surface-inverse-soft:var(--ink-800);
+  --surface-brand:var(--morado-600);
+  --surface-overlay:rgba(18,15,13,.56);
+
+  /* ---- Semantic aliases: text ---- */
+  --text-display:var(--ink-900);
+  --text-body:var(--ink-800);
+  --text-muted:var(--ink-500);
+  --text-faint:var(--ink-300);
+  --text-inverse:var(--crema-50);
+  --text-inverse-muted:rgba(253,250,245,.68);
+  --text-accent:var(--morado-600);
+  --text-on-brand:var(--crema-50);
+
+  /* ---- Semantic aliases: borders ---- */
+  --border-subtle:rgba(18,15,13,.08);
+  --border-default:rgba(18,15,13,.14);
+  --border-strong:rgba(18,15,13,.28);
+  --border-accent:var(--lila-300);
+  --border-inverse:rgba(253,250,245,.16);
+
+  /* ---- Semantic aliases: action ---- */
+  --accent-primary:var(--morado-600);
+  --accent-primary-hover:var(--morado-700);
+  --accent-primary-press:var(--morado-900);
+  --accent-soft:var(--lila-200);
+  --accent-soft-hover:var(--lila-300);
+  --focus-ring:rgba(122,79,182,.38);
+
+  /* ---- Semantic aliases: status ---- */
+  --status-success:var(--sage-500);--status-success-bg:var(--sage-100);
+  --status-warning:var(--ambar-500);--status-warning-bg:var(--ambar-100);
+  --status-danger:var(--granate-500);--status-danger-bg:var(--granate-100);
+
+  /* ---- Signature gradients (3D depth, never decorative) ---- */
+  --grad-vitrina:linear-gradient(160deg,var(--crema-100) 0%,var(--beige-200) 58%,var(--lila-200) 100%); /* @kind color */
+  --grad-nocturno:linear-gradient(155deg,var(--ink-900) 0%,var(--morado-900) 100%); /* @kind color */
+  --sheen-top:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,0) 42%); /* @kind color */
+}

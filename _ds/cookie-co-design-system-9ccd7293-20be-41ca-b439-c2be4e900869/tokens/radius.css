@@ -1,0 +1,4 @@
+:root{
+  --radius-xs:4px;--radius-sm:8px;--radius-md:14px;--radius-lg:22px;--radius-xl:32px;--radius-2xl:44px;--radius-pill:999px;
+  --border-width-hairline:1px;--border-width-strong:1.5px; /* @kind other */
+}
