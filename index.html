@@ -1333,25 +1333,63 @@
         <p style="margin:0;max-width:50ch;font-size:clamp(16px,1.8vw,18px);line-height:1.7;color:var(--text-body);text-wrap:pretty">Ese cumpleaños que llevas semanas planeando, la sorpresa para tu mamá o el detalle para tu mejor amiga merecen una torta tan especial como el momento. Con <strong style="font-weight:700;color:var(--morado-700)">byLubakery</strong>, Luisana vuelve a la repostería con la que empezó todo: tú le cuentas qué celebras y ella la prepara con cariño, para que solo te preocupes de disfrutar.</p>
         <span style="min-height:40px;display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border-radius:999px;background:var(--lila-100);font-size:14px;font-weight:600;color:var(--morado-700)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>Pedidos con mínimo 5 días de anticipación</span>
         <span style="min-height:40px;display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border-radius:999px;background:var(--lila-100);font-size:14px;font-weight:600;color:var(--morado-700)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>Retiro sin costo en La Florida · Despacho a toda la RM</span>
-        <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" size="lg" onClick="{{ cotizarTorta }}" hint-size="190px,54px">Cotizar mi torta</x-import>
+        <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" size="lg" onClick="{{ irCotizador }}" hint-size="190px,54px">Cotizar mi torta</x-import>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
-        <div style="display:grid;gap:8px;align-content:start;padding:18px;border-radius:20px;background:var(--surface-card);border:1px solid var(--border-subtle)">
-          <span style="font:600 11px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">Sabores</span>
-          <ul style="margin:0;padding-left:18px;display:grid;gap:4px;font-size:15px;line-height:1.45;color:var(--ink-800)"><li>Red Velvet</li><li>Zanahoria con nueces</li><li>Torta húmeda de chocolate</li><li>Cookie Cake</li></ul>
+      <div id="cotizador" style="display:grid;gap:20px;padding:clamp(18px,3vw,28px);border-radius:28px;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-md)">
+        <div style="display:grid;gap:6px">
+          <span style="font:600 11px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">Cotizador</span>
+          <h2 style="margin:0;font:400 clamp(26px,3.6vw,34px)/1.08 var(--font-display);color:var(--ink-900)">Arma tu torta</h2>
+          <p style="margin:0;font-size:14px;line-height:1.55;color:var(--text-muted)">Elige lo que te gusta y te enviamos el precio por WhatsApp.</p>
         </div>
-        <div style="display:grid;gap:8px;align-content:start;padding:18px;border-radius:20px;background:var(--surface-card);border:1px solid var(--border-subtle)">
-          <span style="font:600 11px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">Cubiertas</span>
-          <ul style="margin:0;padding-left:18px;display:grid;gap:4px;font-size:15px;line-height:1.45;color:var(--ink-800)"><li>Crema de mantequilla</li><li>Crema suave</li><li>Frosting de queso crema</li></ul>
+        <div role="group" aria-label="Porciones" style="display:grid;gap:8px">
+          <span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)">Porciones</span>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ tortaPorciones }}" as="op" hint-placeholder-count="4">
+              <button onClick="{{ op.set }}" aria-pressed="{{ op.on }}" style="{{ op.style }}">{{ op.label }}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ tortaErr.porciones }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size:13px;color:var(--status-danger)">{{ tortaErr.porciones }}</span>
+          </sc-if>
         </div>
-        <div style="display:grid;gap:8px;align-content:start;padding:18px;border-radius:20px;background:var(--surface-card);border:1px solid var(--border-subtle)">
-          <span style="font:600 11px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">Tamaños</span>
-          <ul style="margin:0;padding-left:18px;display:grid;gap:4px;font-size:15px;line-height:1.45;color:var(--ink-800)"><li>2 porciones</li><li>4–6 porciones</li><li>8–10 porciones</li><li>15 porciones</li></ul>
+        <div role="group" aria-label="Sabor" style="display:grid;gap:8px">
+          <span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)">Sabor</span>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ tortaSabor }}" as="op" hint-placeholder-count="4">
+              <button onClick="{{ op.set }}" aria-pressed="{{ op.on }}" style="{{ op.style }}">{{ op.label }}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ tortaErr.sabor }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size:13px;color:var(--status-danger)">{{ tortaErr.sabor }}</span>
+          </sc-if>
         </div>
-        <div style="display:grid;gap:8px;align-content:start;padding:18px;border-radius:20px;background:var(--surface-card);border:1px solid var(--border-subtle)">
-          <span style="font:600 11px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">Decoración</span>
-          <ul style="margin:0;padding-left:18px;display:grid;gap:4px;font-size:15px;line-height:1.45;color:var(--ink-800)"><li>Escrito</li><li>Toppers</li><li>Detalles sencillos</li></ul>
+        <div role="group" aria-label="Cubierta" style="display:grid;gap:8px">
+          <span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)">Cubierta</span>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ tortaCubierta }}" as="op" hint-placeholder-count="4">
+              <button onClick="{{ op.set }}" aria-pressed="{{ op.on }}" style="{{ op.style }}">{{ op.label }}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ tortaErr.cubierta }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size:13px;color:var(--status-danger)">{{ tortaErr.cubierta }}</span>
+          </sc-if>
         </div>
+        <label style="display:grid;gap:8px">
+          <span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)">Fecha de entrega</span>
+          <input type="date" value="{{ tortaFecha }}" min="{{ tortaFechaMin }}" onChange="{{ onTortaFecha }}" style="width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--border-default);background:var(--surface-card);box-shadow:inset 0 1px 3px rgba(30,20,12,.1);font:400 15px/1.5 var(--font-sans);color:var(--text-body);min-height:48px">
+          <span style="font-size:12px;color:var(--text-faint)">Mínimo 5 días de anticipación.</span>
+          <sc-if value="{{ tortaErr.fecha }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size:13px;color:var(--status-danger)">{{ tortaErr.fecha }}</span>
+          </sc-if>
+        </label>
+        <label style="display:grid;gap:8px">
+          <span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)">Escrito o detalle (opcional)</span>
+          <textarea value="{{ tortaEscrito }}" onChange="{{ onTortaEscrito }}" rows="2" maxlength="160" placeholder="Ej.: «Feliz cumple, Martina» con corazones lilas." style="width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--border-default);background:var(--surface-card);box-shadow:inset 0 1px 3px rgba(30,20,12,.1);font:400 15px/1.5 var(--font-sans);color:var(--text-body);resize:vertical"></textarea>
+          <span style="font-size:12px;color:var(--text-faint)">Decoración semipersonalizada: escrito, toppers y detalles sencillos.</span>
+        </label>
+        <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Input" label="Tu nombre" value="{{ tortaNombre }}" onChange="{{ onTortaNombre }}" error="{{ tortaErr.nombre }}" hint-size="100%,72px"></x-import>
+        <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" size="lg" fullWidth="{{ true }}" onClick="{{ cotizarTorta }}" hint-size="100%,54px">Enviar cotización por WhatsApp</x-import>
+        <span style="font-size:12px;line-height:1.5;color:var(--text-faint);text-align:center">Se abre WhatsApp con tu pedido escrito. Luisana te responde con el precio.</span>
       </div>
     </div>
     <div aria-label="Tortas byLubakery" style="margin-top:clamp(28px,4vw,40px);display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:4px 2px 18px">
@@ -1447,6 +1485,7 @@ class Component extends DCLogic {
     login: { nombre: '', email: '', cumple: '' }, loginErr: {},
     faq: {},
     resenas: [], nuevaResena: { nombre: '', estrellas: 0, texto: '' }, resenaErr: {}, resenaEnviada: false,
+    torta: { porciones: '', sabor: '', cubierta: '', fecha: '', escrito: '', nombre: '' }, tortaErr: {},
     toast: null,
   };
 
@@ -2214,10 +2253,42 @@ class Component extends DCLogic {
     window.open('https://wa.me/' + n + '?text=' + encodeURIComponent(this.mensajeWhatsapp()), '_blank');
   };
   irTortas = () => this.ir('tortas');
+  /* Cotizador de tortas byLubakery (sin precios: la cotización se responde por WhatsApp) */
+  TORTA_OPCIONES = {
+    porciones: ['2 porciones', '4–6 porciones', '8–10 porciones', '15 porciones'],
+    sabor: ['Red Velvet', 'Zanahoria con nueces', 'Torta húmeda de chocolate', 'Cookie Cake'],
+    cubierta: ['Crema de mantequilla', 'Crema suave', 'Frosting de queso crema'],
+  };
+  fechaMinTorta() {
+    const d = new Date(); d.setDate(d.getDate() + 5);
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  setTorta = (k, v) => {
+    const e = Object.assign({}, this.state.tortaErr); delete e[k];
+    this.setState({ torta: Object.assign({}, this.state.torta, { [k]: v }), tortaErr: e });
+  };
+  irCotizador = () => this.bajarA('cotizador');
   cotizarTorta = () => {
+    const t = this.state.torta, e = {};
+    if (!t.porciones) e.porciones = 'Elige cuántas porciones necesitas.';
+    if (!t.sabor) e.sabor = 'Elige un sabor.';
+    if (!t.cubierta) e.cubierta = 'Elige una cubierta.';
+    if (!t.fecha) e.fecha = 'Elige la fecha de entrega.';
+    else if (t.fecha < this.fechaMinTorta()) e.fecha = 'Necesitamos al menos 5 días de anticipación.';
+    if (!t.nombre.trim()) e.nombre = 'Escribe tu nombre.';
+    if (Object.keys(e).length) { this.setState({ tortaErr: e }); return this.avisar('Completa los datos marcados.'); }
     const n = this.D ? this.D.CONFIG.whatsapp : '';
     if (!n) return this.avisar('Número de WhatsApp POR CONFIRMAR.');
-    window.open('https://wa.me/' + n + '?text=' + encodeURIComponent('Hola Cookie Co 🎂 Quiero cotizar una torta byLubakery.\n\nPorciones: \nSabor: \nCubierta: \nFecha: \nEscrito o detalle: '), '_blank');
+    const [a, m, d] = t.fecha.split('-').map(Number);
+    const fecha = new Date(a, m - 1, d).toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' });
+    const msg = 'Hola Cookie Co 🎂 Quiero cotizar una torta byLubakery.\n\n'
+      + 'Nombre: ' + t.nombre.trim() + '\n'
+      + 'Porciones: ' + t.porciones + '\n'
+      + 'Sabor: ' + t.sabor + '\n'
+      + 'Cubierta: ' + t.cubierta + '\n'
+      + 'Fecha de entrega: ' + fecha + '\n'
+      + 'Escrito o detalle: ' + (t.escrito.trim() || 'Sin escrito');
+    window.open('https://wa.me/' + n + '?text=' + encodeURIComponent(msg), '_blank');
   };
   abrirInstagram = () => window.open('https://www.instagram.com/' + (this.D ? this.D.CONFIG.instagram : 'cookie.co_cl') + '/', '_blank');
   copiarMensaje = () => {
@@ -2274,7 +2345,7 @@ class Component extends DCLogic {
       irQuiz: () => this.ir('quiz'), irFavoritos: () => this.ir('favoritos'), irCarrito: () => this.ir('carrito'),
       irCheckout: () => this.ir('checkout'), irCuenta: () => this.ir('cuenta'), irAyuda: () => this.ir('ayuda'),
       irPoliticas: () => this.ir('politicas'), esPoliticas: s.ruta === 'politicas',
-      irTortas: this.irTortas, cotizarTorta: this.cotizarTorta,
+      irTortas: this.irTortas, cotizarTorta: this.cotizarTorta, irCotizador: this.irCotizador,
       volver: () => this.ir(s.rutaAnterior || 'catalogo'),
       vistaAbierta: !!(s.vistaSlug && this.cookie(s.vistaSlug)), cerrarVista: this.cerrarVista, toggleZoom: this.toggleZoom, moverZoom: this.moverZoom,
       abrirWhatsapp: this.abrirWhatsapp, abrirInstagram: this.abrirInstagram,
@@ -2421,6 +2492,14 @@ class Component extends DCLogic {
     v.resenaNombre = nr.nombre; v.resenaTexto = nr.texto; v.resenaErr = s.resenaErr;
     v.onResenaNombre = e => this.setResena('nombre', e.target.value);
     v.onResenaTexto = e => this.setResena('texto', e.target.value);
+    const t = s.torta;
+    ['porciones', 'sabor', 'cubierta'].forEach(k => {
+      v['torta' + k[0].toUpperCase() + k.slice(1)] = this.TORTA_OPCIONES[k].map(o => ({ label: o, on: t[k] === o, style: this.chip(t[k] === o), set: () => this.setTorta(k, o) }));
+    });
+    v.tortaErr = s.tortaErr; v.tortaFecha = t.fecha; v.tortaFechaMin = this.fechaMinTorta(); v.tortaEscrito = t.escrito; v.tortaNombre = t.nombre;
+    v.onTortaFecha = e => this.setTorta('fecha', e.target.value);
+    v.onTortaEscrito = e => this.setTorta('escrito', e.target.value);
+    v.onTortaNombre = e => this.setTorta('nombre', e.target.value);
     v.enviarResena = this.enviarResena;
     v.estrellasInput = [1, 2, 3, 4, 5].map(n => ({
       label: n + (n === 1 ? ' estrella' : ' estrellas'),
