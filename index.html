@@ -68,10 +68,10 @@
     </sc-if>
   </button>
   <sc-if value="{{ navMovil }}" hint-placeholder-val="{{ false }}">
-  <nav aria-label="Secciones" style="flex:1 0 100%;min-width:0;display:grid;grid-template-columns:1.2fr 1.2fr .8fr;gap:6px;padding:2px 0 4px">
-    <button onClick="{{ irCatalogo }}" aria-current="{{ navCatActual }}" style="{{ navCatStyle }}">Catálogo de galletas</button>
+  <nav aria-label="Secciones" style="flex:1 0 100%;min-width:0;display:grid;grid-template-columns:.85fr 1.3fr 1.15fr;gap:6px;padding:2px 0 4px">
+    <button onClick="{{ irCatalogo }}" aria-current="{{ navCatActual }}" style="{{ navCatStyle }}">Catálogo</button>
     <button onClick="{{ irTortas }}" aria-current="{{ navTortasActual }}" style="{{ navTortasStyle }}">Tortas byLubakery</button>
-    <button onClick="{{ irBox }}" aria-current="{{ navBoxActual }}" style="{{ navBoxStyle }}">Reservar</button>
+    <button onClick="{{ irComoReservo }}" style="{{ navReservoStyle }}">¿Cómo reservo?</button>
   </nav>
   </sc-if>
 </header>
@@ -323,7 +323,7 @@
     </div>
   </section>
 
-  <section data-reveal="1" style="max-width:1240px;margin:0 auto;padding:clamp(52px,8vw,96px) clamp(16px,5vw,56px) 0;opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
+  <section id="como-reservo" data-reveal="1" style="max-width:1240px;margin:0 auto;padding:clamp(52px,8vw,96px) clamp(16px,5vw,56px) 0;opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
     <h2 style="font-family:var(--font-display);font-size:clamp(28px,5.4vw,38px);line-height:1.04;letter-spacing:-.02em;margin:0 0 26px;color:var(--ink-900)">Cómo se pide</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px">
       <sc-for list="{{ pasos }}" as="p" hint-placeholder-count="4">
@@ -2298,6 +2298,7 @@ class Component extends DCLogic {
     window.open('https://wa.me/' + n + '?text=' + encodeURIComponent(this.mensajeWhatsapp()), '_blank');
   };
   irTortas = () => this.ir('tortas');
+  irComoReservo = () => { if (this.state.ruta !== 'home') this.ir('home'); this.bajarA('como-reservo'); };
   /* Cotizador de tortas byLubakery (sin precios: la cotización se responde por WhatsApp) */
   TORTA_OPCIONES = {
     porciones: ['2 porciones', '4–6 porciones', '8–10 porciones', '15 porciones'],
@@ -2393,12 +2394,12 @@ class Component extends DCLogic {
   };
 
   /* ---------- estilos calculados ---------- */
-  /* Botones de la fila superior del celular: el de la página actual va en morado */
+  /* Botones lila de la fila superior del celular: el de la página actual va en un lila más intenso */
   pildora(activa) {
     const base = 'min-width:0;min-height:36px;padding:5px 8px;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:999px;border:1px solid var(--border-subtle);cursor:pointer;font-family:var(--font-sans);font-size:12.5px;line-height:1.15;font-weight:600;';
     return base + (activa
-      ? 'background:var(--morado-600);border-color:var(--morado-600);color:var(--crema-50);box-shadow:0 2px 0 var(--morado-900)'
-      : 'background:var(--surface-card);color:var(--ink-800);box-shadow:0 2px 0 var(--beige-300)');
+      ? 'background:var(--lila-300);border-color:var(--lila-400);color:var(--morado-900);box-shadow:0 2px 0 var(--lila-400)'
+      : 'background:var(--lila-100);border-color:var(--lila-200);color:var(--morado-700);box-shadow:0 2px 0 var(--lila-200)');
   }
   chip(activo) {
     return 'height:38px;padding:0 16px;border-radius:999px;cursor:pointer;font-family:var(--font-sans);font-size:13px;font-weight:600;transition:all .16s cubic-bezier(.22,.61,.36,1);' +
@@ -2428,7 +2429,7 @@ class Component extends DCLogic {
       irTortas: this.irTortas, cotizarTorta: this.cotizarTorta, irCotizador: this.irCotizador,
       navCatStyle: this.pildora(s.ruta === 'catalogo' || s.ruta === 'producto'), navCatActual: (s.ruta === 'catalogo' || s.ruta === 'producto') ? 'page' : 'false',
       navTortasStyle: this.pildora(s.ruta === 'tortas'), navTortasActual: s.ruta === 'tortas' ? 'page' : 'false',
-      navBoxStyle: this.pildora(s.ruta === 'box'), navBoxActual: s.ruta === 'box' ? 'page' : 'false',
+      navReservoStyle: this.pildora(false), irComoReservo: this.irComoReservo,
       volver: () => this.ir(s.rutaAnterior || 'catalogo'),
       vistaAbierta: !!(s.vistaSlug && this.cookie(s.vistaSlug)), cerrarVista: this.cerrarVista, toggleZoom: this.toggleZoom, moverZoom: this.moverZoom,
       abrirWhatsapp: this.abrirWhatsapp, abrirInstagram: this.abrirInstagram,
