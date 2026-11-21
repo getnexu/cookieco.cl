@@ -1382,10 +1382,29 @@
             <span style="font-size:13px;color:var(--status-danger)">{{ tortaErr.fecha }}</span>
           </sc-if>
         </label>
+        <div role="group" aria-label="Detalle adicional" style="display:grid;gap:8px">
+          <span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)">Detalle adicional</span>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ tortaExtra }}" as="op" hint-placeholder-count="5">
+              <button onClick="{{ op.set }}" aria-pressed="{{ op.on }}" style="{{ op.style }}">{{ op.label }}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ tortaRef }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:18px;background:var(--lila-100)">
+              <img src="{{ tortaRefSrc }}" alt="" style="width:52px;height:52px;border-radius:12px;object-fit:cover;flex:0 0 auto">
+              <div style="flex:1;min-width:0;display:grid;gap:2px">
+                <span style="font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--morado-600)">Foto de referencia</span>
+                <span style="font-size:14px;font-weight:600;color:var(--ink-900)">{{ tortaRefDetalle }}</span>
+              </div>
+              <button onClick="{{ quitarReferencia }}" style="flex:0 0 auto;height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--border-default);background:var(--surface-card);font-size:12px;font-weight:600;cursor:pointer">Quitar</button>
+            </div>
+          </sc-if>
+          <span style="font-size:12px;color:var(--text-faint)">¿Te gustó un detalle de las fotos? Toca la foto y elige «Quiero un detalle como este». Luisana te confirma su valor en la cotización.</span>
+        </div>
         <label style="display:grid;gap:8px">
-          <span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)">Escrito o detalle (opcional)</span>
+          <span style="font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)">Escrito (opcional)</span>
           <textarea value="{{ tortaEscrito }}" onChange="{{ onTortaEscrito }}" rows="2" maxlength="160" placeholder="Ej.: «Feliz cumple, Martina» con corazones lilas." style="width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--border-default);background:var(--surface-card);box-shadow:inset 0 1px 3px rgba(30,20,12,.1);font:400 15px/1.5 var(--font-sans);color:var(--text-body);resize:vertical"></textarea>
-          <span style="font-size:12px;color:var(--text-faint)">Decoración semipersonalizada: escrito, toppers y detalles sencillos.</span>
+          <span style="font-size:12px;color:var(--text-faint)">Incluido: escrito, toppers y detalles sencillos.</span>
         </label>
         <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Input" label="Tu nombre" value="{{ tortaNombre }}" onChange="{{ onTortaNombre }}" error="{{ tortaErr.nombre }}" hint-size="100%,72px"></x-import>
         <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" size="lg" fullWidth="{{ true }}" onClick="{{ cotizarTorta }}" hint-size="100%,54px">Enviar cotización por WhatsApp</x-import>
@@ -1393,15 +1412,35 @@
       </div>
     </div>
     <div aria-label="Tortas byLubakery" style="margin-top:clamp(28px,4vw,40px);display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:4px 2px 18px">
-        <img src="assets/tortas/frutillas.jpg" alt="Torta de crema con frutillas frescas" loading="lazy" style="flex:0 0 auto;width:clamp(220px,28vw,300px);aspect-ratio:4/5;object-fit:cover;border-radius:24px;box-shadow:var(--shadow-md);scroll-snap-align:start;background:var(--crema-100)">
-        <img src="assets/tortas/red-velvet-lucas.jpg" alt="Torta Red Velvet con «Feliz Cumpleaños Lucas» escrito" loading="lazy" style="flex:0 0 auto;width:clamp(220px,28vw,300px);aspect-ratio:4/5;object-fit:cover;border-radius:24px;box-shadow:var(--shadow-md);scroll-snap-align:start;background:var(--crema-100)">
-        <img src="assets/tortas/michelle-flores.jpg" alt="Torta personalizada con nombre y flores rosadas" loading="lazy" style="flex:0 0 auto;width:clamp(220px,28vw,300px);aspect-ratio:4/5;object-fit:cover;border-radius:24px;box-shadow:var(--shadow-md);scroll-snap-align:start;background:var(--crema-100)">
-        <img src="assets/tortas/birthday-queen-dorada.jpg" alt="Torta blanca con mariposas y esferas doradas" loading="lazy" style="flex:0 0 auto;width:clamp(220px,28vw,300px);aspect-ratio:4/5;object-fit:cover;border-radius:24px;box-shadow:var(--shadow-md);scroll-snap-align:start;background:var(--crema-100)">
-        <img src="assets/tortas/feliz-cumple-chispas.jpg" alt="Torta con chispas de colores y «Feliz Cumple Princesa» escrito" loading="lazy" style="flex:0 0 auto;width:clamp(220px,28vw,300px);aspect-ratio:4/5;object-fit:cover;border-radius:24px;box-shadow:var(--shadow-md);scroll-snap-align:start;background:var(--crema-100)">
-        <img src="assets/tortas/happy-birthday-azul.jpg" alt="Torta con «Happy Birthday» escrito en azul" loading="lazy" style="flex:0 0 auto;width:clamp(220px,28vw,300px);aspect-ratio:4/5;object-fit:cover;border-radius:24px;box-shadow:var(--shadow-md);scroll-snap-align:start;background:var(--crema-100)">
-        <img src="assets/tortas/bento-chocolate.jpg" alt="Mini torta de chocolate con topper «Happy Birthday»" loading="lazy" style="flex:0 0 auto;width:clamp(220px,28vw,300px);aspect-ratio:4/5;object-fit:cover;border-radius:24px;box-shadow:var(--shadow-md);scroll-snap-align:start;background:var(--crema-100)">
+      <sc-for list="{{ tortaFotos }}" as="tf" hint-placeholder-count="7">
+        <button onClick="{{ tf.abrir }}" aria-label="{{ tf.label }}" style="flex:0 0 auto;position:relative;width:clamp(220px,28vw,300px);aspect-ratio:4/5;padding:0;border:none;border-radius:24px;overflow:hidden;box-shadow:var(--shadow-md);scroll-snap-align:start;background:var(--crema-100);cursor:zoom-in">
+          <img src="{{ tf.src }}" alt="{{ tf.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block">
+          <span style="position:absolute;left:12px;bottom:12px;height:30px;padding:0 12px;display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:rgba(253,250,245,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-size:12px;font-weight:600;color:var(--ink-900)">🔍 Ver detalle</span>
+        </button>
+      </sc-for>
     </div>
   </main>
+</sc-if>
+
+<sc-if value="{{ tortaVistaAbierta }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ cerrarTortaVista }}" style="position:fixed;inset:0;z-index:95;background:rgba(18,15,13,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:grid;place-items:center;padding:16px">
+    <div onClick="{{ pararClick }}" role="dialog" aria-modal="true" aria-label="{{ tvAlt }}" style="position:relative;width:min(100%,560px);max-height:calc(100vh - 32px);display:grid;grid-template-rows:minmax(0,1fr) auto;border-radius:28px;overflow:hidden;background:var(--surface-card);box-shadow:var(--shadow-xl)">
+      <div onClick="{{ toggleZoomTorta }}" onPointerMove="{{ moverZoomTorta }}" role="button" tabindex="0" aria-label="{{ tvZoomLabel }}" style="position:relative;min-height:0;aspect-ratio:4/5;max-height:calc(100vh - 220px);overflow:hidden;background:#FCF7F2;cursor:zoom-in;touch-action:pan-y">
+        <img id="cc-torta-img" src="{{ tvSrc }}" alt="{{ tvAlt }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;transform-origin:50% 50%;transition:transform .42s cubic-bezier(.22,.61,.36,1)">
+        <span style="position:absolute;left:14px;bottom:14px;height:32px;padding:0 12px;display:inline-flex;align-items:center;border-radius:999px;background:rgba(253,250,245,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-size:12px;font-weight:600;color:var(--ink-900);pointer-events:none">{{ tvZoomTxt }}</span>
+        <button onClick="{{ tortaAnterior }}" aria-label="Torta anterior" style="position:absolute;left:10px;top:50%;margin-top:-22px;width:44px;height:44px;border-radius:50%;border:none;background:rgba(253,250,245,.9);font-size:20px;cursor:pointer;box-shadow:var(--shadow-md)">‹</button>
+        <button onClick="{{ tortaSiguiente }}" aria-label="Torta siguiente" style="position:absolute;right:10px;top:50%;margin-top:-22px;width:44px;height:44px;border-radius:50%;border:none;background:rgba(253,250,245,.9);font-size:20px;cursor:pointer;box-shadow:var(--shadow-md)">›</button>
+        <button onClick="{{ cerrarTortaVista }}" aria-label="Cerrar" style="position:absolute;right:10px;top:10px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(253,250,245,.9);font-size:18px;cursor:pointer;box-shadow:var(--shadow-md)">✕</button>
+      </div>
+      <div style="padding:16px 18px 18px;display:grid;gap:12px">
+        <div style="display:grid;gap:2px">
+          <span style="font:600 11px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">Detalle · {{ tvPos }}</span>
+          <span style="font:400 22px/1.2 var(--font-display);color:var(--ink-900)">{{ tvDetalle }}</span>
+        </div>
+        <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" size="lg" fullWidth="{{ true }}" onClick="{{ elegirReferencia }}" hint-size="100%,54px">Quiero un detalle como este</x-import>
+      </div>
+    </div>
+  </div>
 </sc-if>
 
 <!-- ============================= POLÍTICAS ============================= -->
@@ -1485,7 +1524,7 @@ class Component extends DCLogic {
     login: { nombre: '', email: '', cumple: '' }, loginErr: {},
     faq: {},
     resenas: [], nuevaResena: { nombre: '', estrellas: 0, texto: '' }, resenaErr: {}, resenaEnviada: false,
-    torta: { porciones: '', sabor: '', cubierta: '', fecha: '', escrito: '', nombre: '' }, tortaErr: {},
+    torta: { porciones: '', sabor: '', cubierta: '', extra: 'Sin detalle adicional', ref: null, fecha: '', escrito: '', nombre: '' }, tortaErr: {}, tortaVista: null, tortaZoom: false,
     toast: null,
   };
 
@@ -1958,8 +1997,8 @@ class Component extends DCLogic {
   cerrarVista = () => this.setState({ vistaSlug: null, zoom: false });
   toggleZoom = e => { const z = !this.state.zoom; this.setState({ zoom: z }); this.aplicarZoom(e, z); };
   moverZoom = e => { if (this.state.zoom) this.aplicarZoom(e, true); };
-  aplicarZoom(e, z) {
-    const img = document.getElementById('cc-vista-img'); if (!img) return;
+  aplicarZoom(e, z, id) {
+    const img = document.getElementById(id || 'cc-vista-img'); if (!img) return;
     if (!z) { img.style.transform = ''; return; }
     const r = e.currentTarget.getBoundingClientRect();
     img.style.transformOrigin = ((e.clientX - r.left) / r.width * 100).toFixed(1) + '% ' + ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%';
@@ -2258,7 +2297,33 @@ class Component extends DCLogic {
     porciones: ['2 porciones', '4–6 porciones', '8–10 porciones', '15 porciones'],
     sabor: ['Red Velvet', 'Zanahoria con nueces', 'Torta húmeda de chocolate', 'Cookie Cake'],
     cubierta: ['Crema de mantequilla', 'Crema suave', 'Frosting de queso crema'],
+    extra: ['Sin detalle adicional', 'Flores naturales', 'Frutillas frescas', 'Mariposas y esferas doradas', 'Otro (lo cuento en el escrito)'],
   };
+  TORTA_FOTOS = [
+    { src: 'assets/tortas/frutillas.jpg', alt: 'Torta de crema con frutillas frescas', detalle: 'Frutillas frescas y crema' },
+    { src: 'assets/tortas/red-velvet-lucas.jpg', alt: 'Torta Red Velvet con «Feliz Cumpleaños Lucas» escrito', detalle: 'Escrito con nombre y migas de Red Velvet' },
+    { src: 'assets/tortas/michelle-flores.jpg', alt: 'Torta personalizada con nombre y flores rosadas', detalle: 'Nombre dorado y flores naturales' },
+    { src: 'assets/tortas/birthday-queen-dorada.jpg', alt: 'Torta blanca con mariposas y esferas doradas', detalle: 'Mariposas y esferas doradas' },
+    { src: 'assets/tortas/feliz-cumple-chispas.jpg', alt: 'Torta con chispas de colores y «Feliz Cumple Princesa» escrito', detalle: 'Escrito y chispas de colores' },
+    { src: 'assets/tortas/happy-birthday-azul.jpg', alt: 'Torta con «Happy Birthday» escrito en azul', detalle: 'Escrito con corazones' },
+    { src: 'assets/tortas/bento-chocolate.jpg', alt: 'Mini torta de chocolate con topper «Happy Birthday»', detalle: 'Mini torta con topper dorado' },
+  ];
+  abrirTortaVista = i => this.setState({ tortaVista: i, tortaZoom: false });
+  cerrarTortaVista = e => { if (e && e.stopPropagation) e.stopPropagation(); this.setState({ tortaVista: null, tortaZoom: false }); };
+  moverTorta = (e, paso) => {
+    if (e && e.stopPropagation) e.stopPropagation();
+    const n = this.TORTA_FOTOS.length;
+    this.setState({ tortaVista: (this.state.tortaVista + paso + n) % n, tortaZoom: false });
+    this.aplicarZoom(null, false, 'cc-torta-img');
+  };
+  toggleZoomTorta = e => { const z = !this.state.tortaZoom; this.setState({ tortaZoom: z }); this.aplicarZoom(e, z, 'cc-torta-img'); };
+  moverZoomTorta = e => { if (this.state.tortaZoom) this.aplicarZoom(e, true, 'cc-torta-img'); };
+  elegirReferencia = () => {
+    const f = this.TORTA_FOTOS[this.state.tortaVista];
+    this.setState({ torta: Object.assign({}, this.state.torta, { ref: f }), tortaVista: null, tortaZoom: false });
+    this.bajarA('cotizador');
+  };
+  quitarReferencia = () => this.setState({ torta: Object.assign({}, this.state.torta, { ref: null }) });
   fechaMinTorta() {
     const d = new Date(); d.setDate(d.getDate() + 5);
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
@@ -2286,8 +2351,10 @@ class Component extends DCLogic {
       + 'Porciones: ' + t.porciones + '\n'
       + 'Sabor: ' + t.sabor + '\n'
       + 'Cubierta: ' + t.cubierta + '\n'
+      + 'Detalle adicional: ' + t.extra + '\n'
+      + (t.ref ? 'Foto de referencia: ' + t.ref.detalle + ' (de la web)\n' : '')
       + 'Fecha de entrega: ' + fecha + '\n'
-      + 'Escrito o detalle: ' + (t.escrito.trim() || 'Sin escrito');
+      + 'Escrito: ' + (t.escrito.trim() || 'Sin escrito');
     window.open('https://wa.me/' + n + '?text=' + encodeURIComponent(msg), '_blank');
   };
   abrirInstagram = () => window.open('https://www.instagram.com/' + (this.D ? this.D.CONFIG.instagram : 'cookie.co_cl') + '/', '_blank');
@@ -2493,11 +2560,23 @@ class Component extends DCLogic {
     v.onResenaNombre = e => this.setResena('nombre', e.target.value);
     v.onResenaTexto = e => this.setResena('texto', e.target.value);
     const t = s.torta;
-    ['porciones', 'sabor', 'cubierta'].forEach(k => {
+    ['porciones', 'sabor', 'cubierta', 'extra'].forEach(k => {
       v['torta' + k[0].toUpperCase() + k.slice(1)] = this.TORTA_OPCIONES[k].map(o => ({ label: o, on: t[k] === o, style: this.chip(t[k] === o), set: () => this.setTorta(k, o) }));
     });
     v.tortaErr = s.tortaErr; v.tortaFecha = t.fecha; v.tortaFechaMin = this.fechaMinTorta(); v.tortaEscrito = t.escrito; v.tortaNombre = t.nombre;
     v.onTortaFecha = e => this.setTorta('fecha', e.target.value);
+    v.tortaRef = !!t.ref; v.tortaRefSrc = t.ref ? t.ref.src : ''; v.tortaRefDetalle = t.ref ? t.ref.detalle : '';
+    v.quitarReferencia = this.quitarReferencia;
+    v.tortaFotos = this.TORTA_FOTOS.map((f, i) => ({ src: f.src, alt: f.alt, label: 'Ver detalle: ' + f.alt, abrir: () => this.abrirTortaVista(i) }));
+    const tv = s.tortaVista !== null ? this.TORTA_FOTOS[s.tortaVista] : null;
+    v.tortaVistaAbierta = !!tv;
+    if (tv) {
+      v.tvSrc = tv.src; v.tvAlt = tv.alt; v.tvDetalle = tv.detalle; v.tvPos = (s.tortaVista + 1) + ' de ' + this.TORTA_FOTOS.length;
+      v.tvZoomTxt = s.tortaZoom ? 'Toca para alejar' : '🔍 Toca para acercar';
+      v.tvZoomLabel = s.tortaZoom ? 'Alejar foto' : 'Acercar foto';
+    }
+    v.cerrarTortaVista = this.cerrarTortaVista; v.toggleZoomTorta = this.toggleZoomTorta; v.moverZoomTorta = this.moverZoomTorta;
+    v.tortaAnterior = e => this.moverTorta(e, -1); v.tortaSiguiente = e => this.moverTorta(e, 1); v.elegirReferencia = this.elegirReferencia;
     v.onTortaEscrito = e => this.setTorta('escrito', e.target.value);
     v.onTortaNombre = e => this.setTorta('nombre', e.target.value);
     v.enviarResena = this.enviarResena;
