@@ -451,7 +451,7 @@
     </div>
   </div>
   </sc-if>
-  <div style="display:grid;gap:12px;margin-bottom:26px">
+  <div id="filtros-catalogo" style="display:grid;gap:12px;margin-bottom:26px">
     <div style="display:flex;flex-wrap:wrap;gap:8px">
       <sc-for list="{{ filtrosLinea }}" as="fl" hint-placeholder-count="4">
         <button onClick="{{ fl.set }}" style="{{ fl.style }}">{{ fl.label }}</button>
@@ -591,7 +591,7 @@
         <span style="font-family:var(--font-mono);font-size:13px;color:var(--ink-800)">{{ lineaPrecio }}</span>
         <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" variant="secondary" onClick="{{ verLineaEnCatalogo }}" hint-size="190px,44px">Ver esta línea</x-import>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="{{ lineaGrid }}">
         <sc-for list="{{ lineaFotos }}" as="f" hint-placeholder-count="4">
           <div onClick="{{ f.abrir }}" role="button" tabindex="0" style="position:relative;aspect-ratio:2/3;border-radius:18px;overflow:hidden;cursor:pointer;box-shadow:var(--shadow-sm);background:var(--grad-vitrina)">
             <sc-if value="{{ f.hasFoto }}" hint-placeholder-val="{{ false }}">
@@ -2627,8 +2627,9 @@ class Component extends DCLogic {
     base.lineaClaims = (lin0 === 'tradicional'
       ? ['Masa artesanal', '130–150 g por unidad', 'Por encargo']
       : ['Sin azúcar añadida', 'Endulzada con alulosa', 'Sin harinas refinadas', 'Apta para vegetarianos']).map(t => ({ t }));
-    base.verLineaEnCatalogo = () => this.setState({ ruta: 'catalogo', filtroLinea: lin0, filtroPerfil: 'todos' });
-    base.lineaFotos = [];
+    /* «Ver esta línea»: filtra el catálogo y sube hasta el comienzo de la lista (antes quedaba a mitad de página) */
+    base.verLineaEnCatalogo = () => { this.setState({ ruta: 'catalogo', filtroLinea: lin0, filtroPerfil: 'todos' }); this.bajarA('filtros-catalogo'); };
+    base.lineaFotos = []; base.lineaGrid = 'display:grid;grid-template-columns:1fr 1fr;gap:12px';
 
     if (!D) return base;
 
@@ -2706,7 +2707,9 @@ class Component extends DCLogic {
       v.vAgregar = () => { this.addUnidad(vc.slug, 1); this.cerrarVista(); };
       v.vFicha = () => this.abrirFicha(vc.slug);
     }
-    v.lineaFotos = cookies.filter(c => c.linea === lin).slice(0, 4).map(c => ({
+    /* Equilibrio muestra todas sus cookies (incluye Protein, Mix Frutos Secos y Maní Crunch); Clásica, las 4 primeras */
+    v.lineaGrid = lin === 'equilibrio' ? 'display:grid;grid-template-columns:repeat(auto-fill,minmax(min(46%,140px),1fr));gap:12px' : 'display:grid;grid-template-columns:1fr 1fr;gap:12px';
+    v.lineaFotos = cookies.filter(c => c.linea === lin).slice(0, lin === 'equilibrio' ? 99 : 4).map(c => ({
       nombre: c.nombre, foto: c.foto, hasFoto: !!c.foto, sinFoto: !c.foto, alt: c.nombre, abrir: () => this.abrir(c.slug),
     }));
 
