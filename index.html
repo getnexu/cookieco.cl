@@ -44,11 +44,10 @@
     <span style="font-family:var(--font-sans);font-size:15px;font-weight:800;letter-spacing:.06em;color:var(--ink-900);white-space:nowrap">COOKIE<span style="color:var(--morado-600)">.CO</span></span>
   </div>
   <sc-if value="{{ navTexto }}" hint-placeholder-val="{{ true }}">
-  <nav style="flex:0 1 auto;min-width:0;height:22px;display:flex;flex-wrap:wrap;align-items:center;column-gap:18px;row-gap:40px;margin-left:12px;font-size:14px;line-height:22px;overflow:hidden">
-    <span onClick="{{ irCatalogo }}" role="button" tabindex="0" style="color:var(--text-muted);cursor:pointer;white-space:nowrap">Cookies</span>
-    <span onClick="{{ irBox }}" role="button" tabindex="0" style="color:var(--text-muted);cursor:pointer;white-space:nowrap">Crear mi Box</span>
-    <span onClick="{{ irTortas }}" role="button" tabindex="0" style="color:var(--text-muted);cursor:pointer;white-space:nowrap">Tortas</span>
-    <span onClick="{{ irAyuda }}" role="button" tabindex="0" style="color:var(--text-muted);cursor:pointer;white-space:nowrap">Ayuda</span>
+  <nav aria-label="Secciones" style="flex:0 1 auto;min-width:0;display:flex;align-items:center;gap:8px;margin-left:16px">
+    <button onClick="{{ irCatalogo }}" aria-current="{{ navCatActual }}" style="{{ navCatStyleD }}">Catálogo</button>
+    <button onClick="{{ irTortas }}" aria-current="{{ navTortasActual }}" style="{{ navTortasStyleD }}">Tortas byLubakery</button>
+    <button onClick="{{ irComoReservo }}" style="{{ navReservoStyleD }}">¿Cómo reservo?</button>
   </nav>
   </sc-if>
   <span style="flex:1 1 0;min-width:0"></span>
@@ -306,9 +305,9 @@
   <section id="historia" data-reveal="1" aria-label="Nuestra historia" style="max-width:1240px;margin:0 auto;padding:clamp(52px,8vw,96px) clamp(16px,5vw,56px) 0;opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(32px,5vw,72px);align-items:center;padding:clamp(28px,5vw,64px);border-radius:36px;background:var(--grad-vitrina);border:1px solid var(--border-subtle);box-shadow:var(--shadow-md)">
       <figure style="margin:0;display:grid;place-items:center">
-        <div style="width:min(86%,380px);padding:16px 16px 20px;background:var(--white);border-radius:10px;box-shadow:var(--shadow-xl);transform:rotate(-3deg)">
-          <img src="assets/brand/sello-cookieco.png" alt="Sello de COOKIE.CO, by Lu bakery" loading="lazy" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:6px;display:block;background:var(--lila-100)">
-          <figcaption style="margin-top:14px;text-align:center;font:italic 400 24px/1.2 var(--font-display);color:var(--morado-700)">Hecho con cariño, por encargo</figcaption>
+        <div style="width:min(78%,340px);padding:14px 14px 18px;background:var(--white);border-radius:12px;box-shadow:var(--shadow-xl);transform:rotate(-3deg)">
+          <video id="cc-historia-video" data-src="assets/video/historia.mp4" poster="assets/video/historia-poster.jpg" muted loop playsinline preload="none" aria-label="Video de la historia de COOKIE.CO" style="width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:8px;display:block;background:var(--lila-100)"></video>
+          <figcaption style="margin-top:12px;text-align:center;font:italic 400 24px/1.2 var(--font-display);color:var(--morado-700)">Hecho con cariño, por encargo</figcaption>
         </div>
       </figure>
       <div style="display:grid;gap:18px;justify-items:start">
@@ -1650,7 +1649,22 @@ class Component extends DCLogic {
     const c = this.cookie(slug);
     if (c && c.foto && el.getAttribute('src') !== c.foto) el.setAttribute('src', c.foto);
   }
+  /* Video de la historia: se descarga y reproduce solo al aparecer en pantalla, sin sonido y en bucle.
+     Con «reducir movimiento» activado no se reproduce solo: muestra los controles. */
+  activarVideoHistoria() {
+    const v = document.getElementById('cc-historia-video');
+    if (!v || v.dataset.listo) return;
+    v.dataset.listo = '1';
+    v.muted = true; v.loop = true; v.playsInline = true; // el motor de plantillas no conserva estos atributos
+    if (this.reduce) { v.src = v.dataset.src; v.preload = 'metadata'; v.controls = true; return; }
+    if (!('IntersectionObserver' in window)) { v.src = v.dataset.src; v.play().catch(() => {}); return; }
+    new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { if (!v.getAttribute('src')) v.src = v.dataset.src; v.play().catch(() => {}); }
+      else v.pause();
+    }), { threshold: .25 }).observe(v);
+  }
   componentDidUpdate() {
+    this.activarVideoHistoria();
     this.observar();
     this.aplicarHero();
     if (this.escalarHero) this.escalarHero();
@@ -2395,8 +2409,8 @@ class Component extends DCLogic {
 
   /* ---------- estilos calculados ---------- */
   /* Botones lila de la fila superior del celular: el de la página actual va en un lila más intenso */
-  pildora(activa) {
-    const base = 'min-width:0;min-height:36px;padding:5px 8px;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:999px;border:1px solid var(--border-subtle);cursor:pointer;font-family:var(--font-sans);font-size:12.5px;line-height:1.15;font-weight:600;';
+  pildora(activa, escritorio) {
+    const base = (escritorio ? 'padding:0 16px;white-space:nowrap;font-size:13.5px;' : 'padding:5px 8px;font-size:12.5px;') + 'min-width:0;min-height:36px;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:999px;border:1px solid var(--border-subtle);cursor:pointer;font-family:var(--font-sans);line-height:1.15;font-weight:600;';
     return base + (activa
       ? 'background:var(--lila-300);border-color:var(--lila-400);color:var(--morado-900);box-shadow:0 2px 0 var(--lila-400)'
       : 'background:var(--lila-100);border-color:var(--lila-200);color:var(--morado-700);box-shadow:0 2px 0 var(--lila-200)');
@@ -2430,6 +2444,7 @@ class Component extends DCLogic {
       navCatStyle: this.pildora(s.ruta === 'catalogo' || s.ruta === 'producto'), navCatActual: (s.ruta === 'catalogo' || s.ruta === 'producto') ? 'page' : 'false',
       navTortasStyle: this.pildora(s.ruta === 'tortas'), navTortasActual: s.ruta === 'tortas' ? 'page' : 'false',
       navReservoStyle: this.pildora(false), irComoReservo: this.irComoReservo,
+      navCatStyleD: this.pildora(s.ruta === 'catalogo' || s.ruta === 'producto', true), navTortasStyleD: this.pildora(s.ruta === 'tortas', true), navReservoStyleD: this.pildora(false, true),
       volver: () => this.ir(s.rutaAnterior || 'catalogo'),
       vistaAbierta: !!(s.vistaSlug && this.cookie(s.vistaSlug)), cerrarVista: this.cerrarVista, toggleZoom: this.toggleZoom, moverZoom: this.moverZoom,
       abrirWhatsapp: this.abrirWhatsapp, abrirInstagram: this.abrirInstagram,
