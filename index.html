@@ -418,10 +418,9 @@
 <sc-if value="{{ esCatalogo }}" hint-placeholder-val="{{ false }}">
 <main style="width:min(1240px,calc(100% - 20px));box-sizing:border-box;background:color-mix(in oklch,var(--crema-50) 94%,transparent);border:1px solid var(--lila-200);border-radius:clamp(24px,4vw,40px);box-shadow:0 24px 60px -36px rgba(69,38,108,.45);margin:clamp(14px,3vw,32px) auto 40px;padding:clamp(22px,4vw,44px) clamp(14px,4vw,44px)">
   <span style="font:600 12px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)"><span onClick="{{ irCategorias }}" role="link" tabindex="0" style="cursor:pointer;text-decoration:underline;text-underline-offset:3px">Categorías</span> › Galletas</span>
-  <h1 style="font-family:var(--font-display);font-size:clamp(32px,7vw,54px);line-height:1.04;letter-spacing:-.02em;margin:10px 0 6px;color:var(--ink-900)">Todas las cookies</h1>
+  <h1 style="font-family:var(--font-display);font-size:clamp(32px,7vw,54px);line-height:1.04;letter-spacing:-.02em;margin:10px 0 6px;color:var(--ink-900)">{{ catalogoTitulo }}</h1>
   <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:var(--text-muted)">{{ catalogoResumen }}</p>
   <div style="display:flex;flex-wrap:wrap;gap:10px;margin:0 0 24px">
-    <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" onClick="{{ irBox }}" hint-size="150px,44px">Crear mi Box</x-import>
     <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" variant="secondary" onClick="{{ irComoReservo }}" hint-size="150px,44px">¿Cómo reservo?</x-import>
   </div>
   <sc-if value="{{ hayAbanico }}" hint-placeholder-val="{{ true }}">
@@ -470,28 +469,42 @@
       <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" variant="secondary" onClick="{{ limpiarFiltros }}" hint-size="160px,44px">Limpiar filtros</x-import>
     </div>
   </sc-if>
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:18px">
-    <sc-for list="{{ catalogo }}" as="c" hint-placeholder-count="9">
-      <div onClick="{{ c.abrir }}" role="button" tabindex="0" style="position:relative;display:grid;grid-template-rows:auto 1fr;align-content:start;border-radius:22px;overflow:hidden;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-sm);cursor:pointer;transition:transform .26s cubic-bezier(.22,.61,.36,1),box-shadow .26s cubic-bezier(.22,.61,.36,1)" style-hover="transform:translateY(-6px);box-shadow:var(--shadow-lg)">
-        <div style="position:relative;aspect-ratio:2/3;background:#FCF7F2;overflow:hidden">
-          <sc-if value="{{ c.hasFoto }}" hint-placeholder-val="{{ false }}">
-            <img src="{{ c.foto }}" alt="{{ c.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:50% 0%;background:#FCF7F2">
-          </sc-if>
-          <sc-if value="{{ c.sinFoto }}" hint-placeholder-val="{{ false }}">
-            <div style="position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(135deg,var(--crema-100) 0 10px,var(--crema-200) 10px 20px)"><span style="font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;color:var(--ink-400);text-align:center;padding:0 12px">FOTO PENDIENTE<br>{{ c.nombreUpper }}</span></div>
-          </sc-if>
-          <span style="position:absolute;top:12px;left:12px;height:24px;display:inline-flex;align-items:center;padding:0 10px;border-radius:999px;background:{{ c.estadoBg }};color:{{ c.estadoFg }};font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase">{{ c.estado }}</span>
-          <button onClick="{{ c.fav }}" aria-label="{{ c.favLabel }}" style="position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:999px;border:none;background:rgba(253,250,245,.9);cursor:pointer;display:grid;place-items:center;color:{{ c.favColor }};font-size:16px;line-height:1">{{ c.favGlifo }}</button>
-        </div>
-        <div style="padding:16px;display:grid;gap:6px">
-          <span style="font:400 18px/1.25 var(--font-display);color:var(--ink-900)">{{ c.nombre }}</span>
-          <span style="font-size:12px;color:var(--morado-600);font-weight:600">{{ c.lineaCorta }}</span>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;gap:8px">
-            <span style="font-family:var(--font-mono);font-size:15px;color:var(--ink-900)">{{ c.precio }}</span>
-            <button onClick="{{ c.add }}" style="height:36px;padding:0 14px;border-radius:999px;border:none;cursor:pointer;background:var(--accent-soft);color:var(--morado-700);font-family:var(--font-sans);font-size:13px;font-weight:600" style-hover="background:var(--accent-primary);color:var(--crema-50)">Agregar</button>
+  <!-- Catálogo separado por línea: Clásica, Equilibrio y Premium -->
+  <div style="display:grid;gap:clamp(36px,5vw,56px)">
+    <sc-for list="{{ catalogoGrupos }}" as="gr" hint-placeholder-count="3">
+      <section aria-label="{{ gr.titulo }}" style="display:grid;gap:18px">
+        <div style="display:grid;gap:6px;padding-bottom:14px;border-bottom:1px solid var(--lila-200)">
+          <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px">
+            <h2 style="font-family:var(--font-display);font-size:clamp(26px,4.6vw,36px);line-height:1.05;letter-spacing:-.02em;margin:0;color:var(--ink-900)">{{ gr.titulo }}</h2>
+            <span style="font-family:var(--font-mono);font-size:13px;color:var(--morado-700)">{{ gr.resumen }}</span>
           </div>
+          <span style="max-width:62ch;font-size:14.5px;line-height:1.55;color:var(--text-muted)">{{ gr.texto }}</span>
         </div>
-      </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:18px">
+          <sc-for list="{{ gr.items }}" as="c" hint-placeholder-count="6">
+          <div onClick="{{ c.abrir }}" role="button" tabindex="0" style="position:relative;display:grid;grid-template-rows:auto 1fr;align-content:start;border-radius:22px;overflow:hidden;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-sm);cursor:pointer;transition:transform .26s cubic-bezier(.22,.61,.36,1),box-shadow .26s cubic-bezier(.22,.61,.36,1)" style-hover="transform:translateY(-6px);box-shadow:var(--shadow-lg)">
+            <div style="position:relative;aspect-ratio:2/3;background:#FCF7F2;overflow:hidden">
+              <sc-if value="{{ c.hasFoto }}" hint-placeholder-val="{{ false }}">
+                <img src="{{ c.foto }}" alt="{{ c.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:50% 0%;background:#FCF7F2">
+              </sc-if>
+              <sc-if value="{{ c.sinFoto }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(135deg,var(--crema-100) 0 10px,var(--crema-200) 10px 20px)"><span style="font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;color:var(--ink-400);text-align:center;padding:0 12px">FOTO PENDIENTE<br>{{ c.nombreUpper }}</span></div>
+              </sc-if>
+              <span style="position:absolute;top:12px;left:12px;height:24px;display:inline-flex;align-items:center;padding:0 10px;border-radius:999px;background:{{ c.estadoBg }};color:{{ c.estadoFg }};font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase">{{ c.estado }}</span>
+              <button onClick="{{ c.fav }}" aria-label="{{ c.favLabel }}" style="position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:999px;border:none;background:rgba(253,250,245,.9);cursor:pointer;display:grid;place-items:center;color:{{ c.favColor }};font-size:16px;line-height:1">{{ c.favGlifo }}</button>
+            </div>
+            <div style="padding:16px;display:grid;gap:6px">
+              <span style="font:400 18px/1.25 var(--font-display);color:var(--ink-900)">{{ c.nombre }}</span>
+              <span style="font-size:12px;color:var(--morado-600);font-weight:600">{{ c.lineaCorta }}</span>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;gap:8px">
+                <span style="font-family:var(--font-mono);font-size:15px;color:var(--ink-900)">{{ c.precio }}</span>
+                <button onClick="{{ c.add }}" style="height:36px;padding:0 14px;border-radius:999px;border:none;cursor:pointer;background:var(--accent-soft);color:var(--morado-700);font-family:var(--font-sans);font-size:13px;font-weight:600" style-hover="background:var(--accent-primary);color:var(--crema-50)">Agregar</button>
+              </div>
+            </div>
+          </div>
+          </sc-for>
+        </div>
+      </section>
     </sc-for>
   </div>
 </main>
@@ -578,6 +591,7 @@
     <div id="lineas" style="display:flex;gap:8px;padding:5px;border-radius:999px;background:var(--crema-100);border:1px solid var(--border-subtle);width:max-content;max-width:100%;margin-bottom:22px">
       <button onClick="{{ verClasica }}" style="{{ btnClasica }}">Línea Clásica</button>
       <button onClick="{{ verEquilibrio }}" style="{{ btnEquilibrio }}">Línea Equilibrio</button>
+      <button onClick="{{ verPremium }}" style="{{ btnPremium }}">Premium</button>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(24px,4vw,48px);align-items:center">
       <div style="display:grid;gap:16px;justify-items:start">
@@ -607,27 +621,6 @@
     </div>
   </section>
 
-  <section data-reveal="1" style="margin-top:clamp(52px,8vw,96px);background:var(--grad-nocturno);color:var(--crema-50);opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
-    <div style="max-width:1240px;margin:0 auto;padding:clamp(52px,8vw,88px) clamp(16px,5vw,56px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(28px,4vw,56px);align-items:center">
-      <div style="display:grid;gap:18px;justify-items:start">
-        <span id="premium" style="font:600 12px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--lila-300)">Cookies Premium</span>
-        <h2 style="font-family:var(--font-display);font-style:italic;font-size:clamp(30px,6.2vw,52px);line-height:1.04;letter-spacing:-.02em;margin:0;color:var(--crema-50)">Para los amantes de lo extraordinario.</h2>
-        <p style="margin:0;max-width:48ch;font-size:clamp(15px,1.7vw,17px);line-height:1.6;color:rgba(253,250,245,.72)">Ferrero Royale y Brownie Melt. Dos cookies con tratamiento aparte.</p>
-        <div style="display:grid;gap:10px;width:100%;max-width:420px">
-          <sc-for list="{{ premium }}" as="p" hint-placeholder-count="1">
-            <div onClick="{{ p.abrir }}" role="button" tabindex="0" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:18px;background:rgba(253,250,245,.07);border:1px solid rgba(253,250,245,.16);backdrop-filter:saturate(1.3) blur(18px);cursor:pointer">
-              <span style="flex:1;font:400 18px/1.2 var(--font-display);color:var(--crema-50)">{{ p.nombre }}</span>
-              <span style="font-family:var(--font-mono);font-size:14px;color:var(--lila-300)">{{ p.precio }}</span>
-            </div>
-          </sc-for>
-        </div>
-      </div>
-      <div style="display:grid;place-items:center;perspective:1000px">
-        <img src="assets/cookies/v2/ferrero-royale.jpeg" alt="Cookie Ferrero Royale partida, con Ferrero Rocher al centro" loading="lazy" style="width:min(100%,420px);aspect-ratio:4/5;object-fit:cover;border-radius:32px;box-shadow:var(--shadow-xl);transform:perspective(900px) rotateX(6deg) rotateY(-8deg)">
-      </div>
-    </div>
-  </section>
-
   <section id="como-reservo" data-reveal="1" style="max-width:1240px;margin:0 auto;padding:clamp(52px,8vw,96px) clamp(16px,5vw,56px) 0;opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
     <h2 style="font-family:var(--font-display);font-size:clamp(28px,5.4vw,38px);line-height:1.04;letter-spacing:-.02em;margin:0 0 26px;color:var(--ink-900)">Cómo se pide</h2>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px">
@@ -640,9 +633,6 @@
         </div>
       </sc-for>
     </div>
-    <div style="display:flex;justify-content:center;margin-top:26px">
-      <button onClick="{{ irBox }}" style="height:56px;padding:0 30px;border-radius:999px;font:700 16px/1 var(--font-sans);border:none;cursor:pointer;background:linear-gradient(160deg,var(--morado-600),var(--morado-700));color:var(--crema-50);box-shadow:0 5px 0 var(--morado-900),0 14px 22px -10px rgba(45,25,60,.45),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .16s cubic-bezier(.22,.61,.36,1),box-shadow .16s cubic-bezier(.22,.61,.36,1)" style-hover="transform:translateY(-4px)" style-active="transform:translateY(4px);box-shadow:0 1px 0 var(--morado-900)">Empezar mi pedido</button>
-    </div>
   </section>
 </div>
 </sc-if>
@@ -652,7 +642,7 @@
 <main aria-label="Categorías" style="max-width:1080px;margin:0 auto;padding:clamp(24px,4vw,48px) clamp(16px,5vw,56px) 56px">
   <span style="font:600 12px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">Categorías</span>
   <h1 style="font-family:var(--font-display);font-size:clamp(32px,7vw,54px);line-height:1.04;letter-spacing:-.02em;margin:10px 0 24px;color:var(--ink-900)">¿Qué se te antoja hoy?</h1>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(14px,3vw,24px)">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:clamp(14px,3vw,24px)">
     <sc-for list="{{ categorias }}" as="k" hint-placeholder-count="2">
       <div onClick="{{ k.ir }}" role="link" tabindex="0" aria-label="{{ k.titulo }}" style="display:grid;grid-template-rows:auto 1fr;border-radius:28px;overflow:hidden;background:var(--surface-card);border:1px solid var(--lila-200);box-shadow:0 24px 50px -34px rgba(69,38,108,.55);cursor:pointer;transition:transform .26s cubic-bezier(.22,.61,.36,1)" style-hover="transform:translateY(-6px)">
         <img src="{{ k.foto }}" alt="{{ k.alt }}" loading="lazy" style="width:100%;aspect-ratio:4/3;object-fit:cover;object-position:{{ k.pos }};display:block;background:#FCF7F2">
@@ -663,6 +653,9 @@
         </div>
       </div>
     </sc-for>
+  </div>
+  <div style="display:flex;justify-content:center;margin-top:22px">
+    <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" variant="secondary" onClick="{{ verTodasCookies }}" hint-size="200px,44px">Ver todas las cookies</x-import>
   </div>
 </main>
 <!-- Categorías: el test, las preguntas frecuentes y el llamado a pedir (salieron de la portada) -->
@@ -704,8 +697,7 @@
       <h2 style="font-family:var(--font-display);font-size:clamp(30px,6.4vw,52px);line-height:1.04;letter-spacing:-.02em;margin:0;color:var(--ink-900);max-width:20ch">Tu antojo ya tiene fecha.</h2>
       <p style="margin:0;max-width:44ch;font-size:16px;line-height:1.6;color:var(--text-muted)">Armas tu caja acá, la confirmamos por WhatsApp y la horneamos para tu día.</p>
       <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center">
-        <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" size="lg" onClick="{{ irBox }}" hint-size="180px,54px">Crear mi Box</x-import>
-        <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" variant="secondary" size="lg" onClick="{{ abrirWhatsapp }}" hint-size="180px,54px">Escribir por WhatsApp</x-import>
+        <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" size="lg" onClick="{{ abrirWhatsapp }}" hint-size="180px,54px">Escribir por WhatsApp</x-import>
       </div>
     </div>
   </section>
@@ -2411,6 +2403,13 @@ class Component extends DCLogic {
   /* «Cómo se pide» ahora vive en Categorías › Galletas */
   irComoReservo = () => { if (this.state.ruta !== 'catalogo') this.ir('catalogo'); this.bajarA('como-reservo'); };
   irCategorias = () => this.ir('categorias');
+  /* Entrar a una línea (Clásica, Equilibrio o Premium): el catálogo queda filtrado y se ve desde el comienzo */
+  irLinea = l => { this.setState({ ruta: 'catalogo', filtroLinea: l, filtroPerfil: 'todos', menuAbierto: false }); this.bajarA('filtros-catalogo'); };
+  LINEAS = {
+    tradicional: { titulo: 'Línea Clásica', texto: 'Masa artesanal con chips, rellenos que se derraman y toppings de verdad.' },
+    equilibrio: { titulo: 'Línea Equilibrio', texto: 'Harina de almendra, avena y coco, endulzada con alulosa. Sin azúcar añadida y sin harinas refinadas.' },
+    premium: { titulo: 'Premium', texto: 'Para los amantes de lo extraordinario: cookies con tratamiento aparte.' },
+  };
   abrirMenu = () => this.setState({ menuAbierto: true });
   cerrarMenu = () => this.setState({ menuAbierto: false });
   /* Ir desde el menú: cambia de página si hace falta y baja hasta la sección */
@@ -2564,17 +2563,17 @@ class Component extends DCLogic {
       esHome: s.ruta === 'home', esCatalogo: s.ruta === 'catalogo', esProducto: s.ruta === 'producto',
       esBox: s.ruta === 'box', esQuiz: s.ruta === 'quiz', esFavoritos: s.ruta === 'favoritos',
       esCarrito: s.ruta === 'carrito', esCheckout: s.ruta === 'checkout', esConfirmacion: s.ruta === 'confirmacion',
-      esCuenta: s.ruta === 'cuenta', esAyuda: s.ruta === 'ayuda', esTortas: s.ruta === 'tortas', esCategorias: s.ruta === 'categorias', irCategorias: this.irCategorias,
+      esCuenta: s.ruta === 'cuenta', esAyuda: s.ruta === 'ayuda', esTortas: s.ruta === 'tortas', esCategorias: s.ruta === 'categorias', irCategorias: this.irCategorias, verTodasCookies: () => this.irLinea('todas'),
       /* en celulares angostos el texto COOKIE.CO se oculta para que quepa el botón de categorías (queda el sello) */
       marcaStyle: 'font-family:var(--font-sans);font-size:15px;font-weight:800;letter-spacing:.06em;color:var(--ink-900);white-space:nowrap' + ((s.ancho || window.innerWidth) < 380 ? ';display:none' : ''),
       menuAbierto: !!s.menuAbierto, abrirMenu: this.abrirMenu, cerrarMenu: this.cerrarMenu,
       menuGrupos: [
         { titulo: 'Galletas', items: [
-          ['🍪', 'Todas las cookies', 'El catálogo completo', 'catalogo'],
-          ['📦', 'Crear mi Box', 'Arma tu caja desde 3 unidades', 'box'],
-          ['✨', 'Arma tu caja, sabor por sabor', 'Cómo funciona la caja', 'catalogo', 'experiencia'],
-          ['🌿', 'Línea Clásica y Equilibrio', 'Con azúcar o sin azúcar añadida', 'catalogo', 'lineas'],
-          ['👑', 'Cookies Premium', 'Ferrero Royale y Brownie Melt', 'catalogo', 'premium'],
+          ['🍪', 'Todas las cookies', 'Las tres líneas en un solo lugar', 'linea:todas'],
+          ['🥨', 'Línea Clásica', 'Masa artesanal, rellenos y toppings', 'linea:tradicional'],
+          ['🌿', 'Línea Equilibrio', 'Sin azúcar añadida ni harinas refinadas', 'linea:equilibrio'],
+          ['👑', 'Premium', 'Ferrero Royale y Brownie Melt', 'linea:premium'],
+          ['📦', 'Crear mi Box, sabor por sabor', 'Arma tu caja desde 3 unidades', 'box'],
           ['📝', 'Cómo se pide', 'Reserva en 4 pasos', 'catalogo', 'como-reservo'],
         ] },
         { titulo: 'Tortas', items: [
@@ -2587,10 +2586,12 @@ class Component extends DCLogic {
           ['💜', 'Nuestra historia', 'Conoce a Luisana', 'home', 'historia'],
           ['⭐', 'Reseñas', 'Lo que dicen nuestras clientas', 'home', 'resenas'],
         ] },
-      ].map(gr => ({ titulo: gr.titulo, items: gr.items.map(([icono, t, d, ruta, id]) => ({ icono, t, d, ir: () => this.irDesdeMenu(ruta, id) })) })),
+      ].map(gr => ({ titulo: gr.titulo, items: gr.items.map(([icono, t, d, ruta, id]) => ({ icono, t, d, ir: ruta.indexOf('linea:') === 0 ? () => this.irLinea(ruta.slice(6)) : () => this.irDesdeMenu(ruta, id) })) })),
       heroMovil: (s.ancho || window.innerWidth) < 720, heroEscritorio: (s.ancho || window.innerWidth) >= 720,
       categorias: [
-        { titulo: 'Galletas', texto: 'New York Cookies de 130 a 150 g, horneadas por encargo. Arma tu box sabor por sabor, desde 3 unidades.', cta: 'Ver galletas y armar mi box', foto: 'assets/cookies/v2/nutella-classic.jpeg', alt: 'Cookie Nutella Classic', pos: '50% 78%', ir: () => this.ir('catalogo') },
+        { titulo: 'Línea Clásica', texto: 'New York Cookies de masa artesanal, con chips, rellenos que se derraman y toppings de verdad.', cta: 'Ver la Línea Clásica', foto: 'assets/cookies/v2/nutella-classic.jpeg', alt: 'Cookie Nutella Classic', pos: '50% 78%', ir: () => this.irLinea('tradicional') },
+        { titulo: 'Línea Equilibrio', texto: 'Harina de almendra, avena y coco, endulzada con alulosa. Sin azúcar añadida y sin harinas refinadas.', cta: 'Ver la Línea Equilibrio', foto: 'assets/cookies/v2/oreo-tella-sin-azucar.jpg', alt: 'Cookie Oreo-Tella sin azúcar añadida', pos: '50% 78%', ir: () => this.irLinea('equilibrio') },
+        { titulo: 'Premium', texto: 'Para los amantes de lo extraordinario: Ferrero Royale y Brownie Melt.', cta: 'Ver Premium', foto: 'assets/cookies/v2/ferrero-royale.jpeg', alt: 'Cookie Ferrero Royale', pos: '50% 78%', ir: () => this.irLinea('premium') },
         { titulo: 'Tortas byLubakery', texto: 'Tortas semipersonalizadas para tu celebración. Elige porciones, sabor y detalles, y cotiza por WhatsApp.', cta: 'Ver tortas y cotizar', foto: 'assets/tortas/frutillas.jpg', alt: 'Torta de crema con frutillas frescas', pos: '50% 50%', ir: () => this.ir('tortas') },
       ],
       toast: s.toast, toastVisible: !!s.toast,
@@ -2619,16 +2620,18 @@ class Component extends DCLogic {
     base.btnEquilibrio = this.pill(lin0 === 'equilibrio');
     base.verClasica = () => this.setState({ lineaHome: 'tradicional' });
     base.verEquilibrio = () => this.setState({ lineaHome: 'equilibrio' });
-    base.lineaTitulo = lin0 === 'tradicional' ? 'Clásicas, irresistibles y siempre un buen plan.' : 'Un dulce con otras reglas.';
-    base.lineaTexto = lin0 === 'tradicional'
+    base.btnPremium = this.pill(lin0 === 'premium');
+    base.verPremium = () => this.setState({ lineaHome: 'premium' });
+    base.lineaTitulo = lin0 === 'tradicional' ? 'Clásicas, irresistibles y siempre un buen plan.' : lin0 === 'premium' ? 'Para los amantes de lo extraordinario.' : 'Un dulce con otras reglas.';
+    base.lineaTexto = lin0 === 'premium' ? 'Ferrero Royale y Brownie Melt. Dos cookies con tratamiento aparte, para cuando quieres algo realmente especial.' : lin0 === 'tradicional'
       ? 'Diez sabores de masa artesanal con chips, rellenos que se derraman y toppings de verdad. Entre 130 y 150 gramos cada una, horneadas por encargo.'
       : 'Base de harina de almendra, avena y coco, endulzada con alulosa. Sin azúcar añadida y sin harinas refinadas, con el mismo relleno generoso.';
-    base.lineaPrecio = lin0 === 'tradicional' ? '$3.500 por unidad' : 'Desde $4.000 por unidad';
-    base.lineaClaims = (lin0 === 'tradicional'
+    base.lineaPrecio = lin0 === 'tradicional' ? '$3.500 por unidad' : lin0 === 'premium' ? '$5.000 por unidad' : 'Desde $4.000 por unidad';
+    base.lineaClaims = (lin0 === 'premium' ? ['2 sabores', '130–150 g por unidad', 'Por encargo'] : lin0 === 'tradicional'
       ? ['Masa artesanal', '130–150 g por unidad', 'Por encargo']
       : ['Sin azúcar añadida', 'Endulzada con alulosa', 'Sin harinas refinadas', 'Apta para vegetarianos']).map(t => ({ t }));
     /* «Ver esta línea»: filtra el catálogo y sube hasta el comienzo de la lista (antes quedaba a mitad de página) */
-    base.verLineaEnCatalogo = () => { this.setState({ ruta: 'catalogo', filtroLinea: lin0, filtroPerfil: 'todos' }); this.bajarA('filtros-catalogo'); };
+    base.verLineaEnCatalogo = () => this.irLinea(lin0);
     base.lineaFotos = []; base.lineaGrid = 'display:grid;grid-template-columns:1fr 1fr;gap:12px';
 
     if (!D) return base;
@@ -2803,7 +2806,7 @@ class Component extends DCLogic {
 
     /* catálogo */
     const perfiles = [['todos', 'Todos'], ['chocolatoso', 'Chocolatosa'], ['cremoso', 'Cremosa'], ['citrico', 'Cítrica'], ['frutal', 'Frutal'], ['crujiente', 'Crujiente']];
-    const lineas = [['todas', 'Todas'], ['tradicional', 'Clásicas'], ['premium', 'Premium'], ['equilibrio', 'Equilibrio']];
+    const lineas = [['todas', 'Todas'], ['tradicional', 'Clásica'], ['equilibrio', 'Equilibrio'], ['premium', 'Premium']];
     v.filtrosLinea = lineas.map(l => ({ label: l[1], style: this.chip(s.filtroLinea === l[0]), set: () => this.setState({ filtroLinea: l[0] }) }));
     v.filtrosPerfil = perfiles.map(p => ({ label: p[1], style: this.chip(s.filtroPerfil === p[0]), set: () => this.setState({ filtroPerfil: p[0] }) }));
     v.limpiarFiltros = () => this.setState({ filtroLinea: 'todas', filtroPerfil: 'todos' });
@@ -2811,6 +2814,13 @@ class Component extends DCLogic {
       (s.filtroLinea === 'todas' || c.linea === s.filtroLinea) &&
       (s.filtroPerfil === 'todos' || c.perfil.indexOf(s.filtroPerfil) >= 0));
     v.catalogo = filtradas.map(ficha);
+    v.catalogoTitulo = s.filtroLinea === 'todas' ? 'Todas las cookies' : this.LINEAS[s.filtroLinea].titulo;
+    v.catalogoGrupos = ['tradicional', 'equilibrio', 'premium'].map(l => {
+      const xs = filtradas.filter(c => c.linea === l);
+      const min = xs.length ? Math.min.apply(null, xs.map(c => c.precio)) : 0;
+      return { titulo: this.LINEAS[l].titulo, texto: this.LINEAS[l].texto, items: xs.map(ficha),
+        resumen: xs.length + (xs.length === 1 ? ' sabor' : ' sabores') + ' · desde ' + CLP(min) };
+    }).filter(g => g.items.length);
     {
       const n = filtradas.length, idx = n ? ((s.abIdx || 0) % n + n) % n : 0;
       const vw = typeof window !== 'undefined' ? window.innerWidth : 1200, vh = typeof window !== 'undefined' ? window.innerHeight : 900, ancho = Math.round(Math.max(220, Math.min(vw < 640 ? vw * 0.7 : vw * 0.36, (vh - 150) / 1.5, 520))), paso = vw < 640 ? 9 : 11;
