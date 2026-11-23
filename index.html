@@ -293,6 +293,31 @@
     </div>
   </section>
 
+  <!-- Instagram: fotos del catálogo que llevan al perfil -->
+  <section id="instagram" data-reveal="1" aria-label="Instagram" style="max-width:1240px;margin:0 auto;padding:clamp(52px,8vw,96px) clamp(16px,5vw,56px) 0;opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
+    <span style="font:600 12px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">Síguenos en Instagram</span>
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin:10px 0 26px">
+      <div style="display:grid;gap:10px">
+        <h2 onClick="{{ abrirInstagram }}" role="link" tabindex="0" style="font-family:var(--font-display);font-size:clamp(30px,6vw,42px);line-height:1.04;letter-spacing:-.02em;margin:0;color:var(--ink-900);cursor:pointer">@cookie.co_cl</h2>
+        <p style="margin:0;max-width:46ch;font-size:15px;line-height:1.6;color:var(--text-muted)">Sabores nuevos, ediciones de temporada y lo que sale del horno cada semana. Síguenos y escríbenos cuando quieras.</p>
+      </div>
+      <span onClick="{{ abrirInstagram }}" role="link" tabindex="0" style="font-size:14px;font-weight:600;color:var(--morado-600);cursor:pointer">Ver perfil →</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(max(15%,min(28%,170px)),1fr));gap:clamp(6px,1.4vw,14px)">
+      <sc-for list="{{ igFotos }}" as="ig" hint-placeholder-count="6">
+        <div onClick="{{ ig.abrir }}" role="link" tabindex="0" aria-label="{{ ig.alt }}" style="position:relative;aspect-ratio:1/1;border-radius:clamp(12px,2vw,22px);overflow:hidden;background:#FCF7F2;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .26s cubic-bezier(.22,.61,.36,1),box-shadow .26s cubic-bezier(.22,.61,.36,1)" style-hover="transform:translateY(-4px);box-shadow:var(--shadow-md)">
+          <img src="{{ ig.foto }}" alt="{{ ig.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:50% 20%">
+          <span style="position:absolute;right:8px;bottom:8px;width:30px;height:30px;border-radius:999px;background:rgba(253,250,245,.9);display:grid;place-items:center;box-shadow:var(--shadow-xs)"><img src="assets/social/instagram.svg" alt="" width="15" height="15" style="display:block;width:15px;height:15px"></span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:22px">
+      <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" size="lg" onClick="{{ abrirInstagram }}" hint-size="210px,54px">Seguir en Instagram</x-import>
+      <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" variant="secondary" size="lg" onClick="{{ abrirWhatsapp }}" hint-size="210px,54px">Escribir por WhatsApp</x-import>
+    </div>
+  </section>
+
+  <div style="height:clamp(52px,8vw,96px)"></div>
   <footer style="background:var(--ink-900);color:rgba(253,250,245,.68)">
     <div style="max-width:1240px;margin:0 auto;padding:clamp(40px,6vw,64px) clamp(16px,5vw,56px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:32px">
       <div style="display:grid;gap:12px;align-content:start">
@@ -628,7 +653,7 @@
     </sc-for>
   </div>
 </main>
-<!-- Categorías: el test, las preguntas frecuentes, Instagram y el llamado a pedir (salieron de la portada) -->
+<!-- Categorías: el test, las preguntas frecuentes y el llamado a pedir (salieron de la portada) -->
 <div style="padding-bottom:56px">
   <section id="test-cookie" data-reveal="1" style="max-width:1240px;margin:0 auto;padding:clamp(52px,8vw,96px) clamp(16px,5vw,56px) 0;opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px">
@@ -660,30 +685,6 @@
       </sc-for>
     </div>
     <div style="margin-top:18px"><span onClick="{{ irAyuda }}" role="button" tabindex="0" style="font-size:14px;font-weight:600;color:var(--morado-600);cursor:pointer">Ver todas las preguntas y contacto →</span></div>
-  </section>
-
-  <!-- Instagram: fotos del catálogo que llevan al perfil -->
-  <section id="instagram" data-reveal="1" aria-label="Instagram" style="max-width:1240px;margin:0 auto;padding:clamp(52px,8vw,96px) clamp(16px,5vw,56px) 0;opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
-    <span style="font:600 12px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">Síguenos en Instagram</span>
-    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin:10px 0 26px">
-      <div style="display:grid;gap:10px">
-        <h2 onClick="{{ abrirInstagram }}" role="link" tabindex="0" style="font-family:var(--font-display);font-size:clamp(30px,6vw,42px);line-height:1.04;letter-spacing:-.02em;margin:0;color:var(--ink-900);cursor:pointer">@cookie.co_cl</h2>
-        <p style="margin:0;max-width:46ch;font-size:15px;line-height:1.6;color:var(--text-muted)">Sabores nuevos, ediciones de temporada y lo que sale del horno cada semana. Síguenos y escríbenos cuando quieras.</p>
-      </div>
-      <span onClick="{{ abrirInstagram }}" role="link" tabindex="0" style="font-size:14px;font-weight:600;color:var(--morado-600);cursor:pointer">Ver perfil →</span>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(max(15%,min(28%,170px)),1fr));gap:clamp(6px,1.4vw,14px)">
-      <sc-for list="{{ igFotos }}" as="ig" hint-placeholder-count="6">
-        <div onClick="{{ ig.abrir }}" role="link" tabindex="0" aria-label="{{ ig.alt }}" style="position:relative;aspect-ratio:1/1;border-radius:clamp(12px,2vw,22px);overflow:hidden;background:#FCF7F2;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .26s cubic-bezier(.22,.61,.36,1),box-shadow .26s cubic-bezier(.22,.61,.36,1)" style-hover="transform:translateY(-4px);box-shadow:var(--shadow-md)">
-          <img src="{{ ig.foto }}" alt="{{ ig.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:50% 20%">
-          <span style="position:absolute;right:8px;bottom:8px;width:30px;height:30px;border-radius:999px;background:rgba(253,250,245,.9);display:grid;place-items:center;box-shadow:var(--shadow-xs)"><img src="assets/social/instagram.svg" alt="" width="15" height="15" style="display:block;width:15px;height:15px"></span>
-        </div>
-      </sc-for>
-    </div>
-    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:22px">
-      <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" size="lg" onClick="{{ abrirInstagram }}" hint-size="210px,54px">Seguir en Instagram</x-import>
-      <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" variant="secondary" size="lg" onClick="{{ abrirWhatsapp }}" hint-size="210px,54px">Escribir por WhatsApp</x-import>
-    </div>
   </section>
 
   <section id="pedir" data-reveal="1" style="margin-top:clamp(52px,8vw,96px);background:var(--crema-100);border-top:1px solid var(--border-subtle);opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
@@ -2570,7 +2571,7 @@ class Component extends DCLogic {
         { titulo: 'Más de COOKIE.CO', items: [
           ['🔮', '¿Qué cookie eres?', 'Test de 5 preguntas', 'categorias', 'test-cookie'],
           ['❓', 'Preguntas frecuentes', 'Entregas, anticipación y pagos', 'categorias', 'preguntas'],
-          ['📸', 'Instagram', 'Lo nuevo de cada semana', 'categorias', 'instagram'],
+          ['📸', 'Instagram', 'Lo nuevo de cada semana', 'home', 'instagram'],
           ['💜', 'Nuestra historia', 'Conoce a Luisana', 'home', 'historia'],
           ['⭐', 'Reseñas', 'Lo que dicen nuestras clientas', 'home', 'resenas'],
         ] },
