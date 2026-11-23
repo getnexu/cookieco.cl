@@ -22,7 +22,7 @@
   window.dispatchEvent(new Event("cookieco-data"));
 </script>
 <style>
-  body { margin:0; background:var(--crema-50); -webkit-font-smoothing:antialiased; }
+  body { margin:0; background:var(--lila-50); -webkit-font-smoothing:antialiased; }
   * { box-sizing:border-box; }
   a { color:var(--morado-600); text-decoration:none; }
   a:hover { color:var(--morado-900); }
@@ -36,9 +36,9 @@
   @keyframes cc-rise { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
 </style>
 </helmet>
-<div style="min-height:100vh;background:radial-gradient(ellipse 85% 60% at 100% 0%,color-mix(in oklch,var(--lila-300) 42%,transparent),transparent 72%) fixed,radial-gradient(ellipse 75% 55% at 0% 100%,color-mix(in oklch,var(--lila-300) 34%,transparent),transparent 72%) fixed,linear-gradient(180deg,var(--crema-50),var(--crema-100)) fixed;font-family:var(--font-sans);color:var(--text-body);padding-bottom:92px">
+<div style="min-height:100vh;background:radial-gradient(ellipse 90% 55% at 100% 0%,color-mix(in oklch,var(--lila-300) 62%,transparent),transparent 70%) fixed,radial-gradient(ellipse 80% 55% at 0% 100%,color-mix(in oklch,var(--lila-300) 52%,transparent),transparent 70%) fixed,linear-gradient(180deg,var(--lila-100) 0%,var(--lila-50) 30%,var(--crema-50) 55%,var(--lila-100) 80%,var(--lila-200) 100%) fixed;font-family:var(--font-sans);color:var(--text-body);padding-bottom:92px">
 
-<header style="position:sticky;top:0;z-index:40;display:flex;flex-wrap:wrap;row-gap:8px;align-items:center;gap:clamp(5px,1.6vw,10px);padding:10px clamp(12px,4vw,56px);background:rgba(253,250,245,.78);backdrop-filter:saturate(1.3) blur(18px);border-bottom:1px solid var(--border-subtle)">
+<header style="position:sticky;top:0;z-index:40;display:flex;flex-wrap:wrap;row-gap:8px;align-items:center;gap:clamp(5px,1.6vw,10px);padding:10px clamp(12px,4vw,56px);background:rgba(253,250,245,.92);backdrop-filter:saturate(1.3) blur(18px);border-bottom:1px solid var(--lila-200);box-shadow:0 6px 18px -14px rgba(69,38,108,.45)">
   <div onClick="{{ irHome }}" role="button" tabindex="0" style="display:flex;align-items:center;gap:10px;cursor:pointer;flex:0 0 auto">
     <img src="assets/brand/sello-cookieco.png" alt="COOKIE.CO" style="width:38px;height:38px;border-radius:50%;flex:0 0 auto;box-shadow:var(--shadow-sm)">
     <span style="font-family:var(--font-sans);font-size:15px;font-weight:800;letter-spacing:.06em;color:var(--ink-900);white-space:nowrap">COOKIE<span style="color:var(--morado-600)">.CO</span></span>
@@ -84,7 +84,7 @@
 <main>
 
   <sc-if value="{{ campanaInactiva }}" hint-placeholder-val="{{ true }}">
-  <section data-no-tilt="1" onPointerMove="{{ heroTilt }}" onPointerLeave="{{ heroReset }}" style="position:relative;overflow:hidden;background:radial-gradient(ellipse 60% 70% at 78% 45%,rgba(196,174,226,.75),rgba(196,174,226,0) 70%),linear-gradient(135deg,var(--crema-50) 0%,var(--beige-200) 55%,var(--lila-100) 100%)">
+  <section data-no-tilt="1" onPointerMove="{{ heroTilt }}" onPointerLeave="{{ heroReset }}" style="position:relative;overflow:hidden;background:radial-gradient(ellipse 60% 70% at 78% 45%,rgba(196,174,226,.75),rgba(196,174,226,0) 70%),linear-gradient(135deg,var(--crema-50) 0%,var(--lila-50) 45%,var(--lila-200) 100%)">
     <div style="position:relative;max-width:1240px;margin:0 auto;padding:clamp(28px,5vw,64px) clamp(16px,5vw,56px) clamp(32px,5vw,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(8px,3vw,40px);align-items:center">
       <div style="display:grid;gap:16px;justify-items:start;position:relative;z-index:2">
         <span style="font:600 12px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">New York Cookies · Santiago de Chile</span>
@@ -135,7 +135,7 @@
     </div>
   </section>
 
-  <section data-reveal="1" style="max-width:1240px;margin:0 auto;padding:clamp(52px,8vw,96px) clamp(16px,5vw,56px) 0;opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
+  <section data-reveal="1" style="width:min(1240px,calc(100% - 20px));box-sizing:border-box;background:color-mix(in oklch,var(--crema-50) 94%,transparent);border:1px solid var(--lila-200);border-radius:clamp(24px,4vw,40px);box-shadow:0 24px 60px -36px rgba(69,38,108,.45);margin:clamp(40px,6vw,72px) auto 0;padding:clamp(28px,5vw,52px) clamp(14px,4vw,44px);opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
     <span style="font:600 12px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">Las más pedidas</span>
     <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin:10px 0 26px">
       <h2 style="font-family:var(--font-display);font-size:clamp(30px,6vw,42px);line-height:1.04;letter-spacing:-.02em;margin:0;color:var(--ink-900)">Elige tu favorita</h2>
@@ -570,7 +570,7 @@
 
 <!-- ============================= CATÁLOGO ============================= -->
 <sc-if value="{{ esCatalogo }}" hint-placeholder-val="{{ false }}">
-<main style="max-width:1240px;margin:0 auto;padding:clamp(24px,4vw,48px) clamp(16px,5vw,56px) 40px">
+<main style="width:min(1240px,calc(100% - 20px));box-sizing:border-box;background:color-mix(in oklch,var(--crema-50) 94%,transparent);border:1px solid var(--lila-200);border-radius:clamp(24px,4vw,40px);box-shadow:0 24px 60px -36px rgba(69,38,108,.45);margin:clamp(14px,3vw,32px) auto 40px;padding:clamp(22px,4vw,44px) clamp(14px,4vw,44px)">
   <span style="font:600 12px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">El catálogo</span>
   <h1 style="font-family:var(--font-display);font-size:clamp(32px,7vw,54px);line-height:1.04;letter-spacing:-.02em;margin:10px 0 6px;color:var(--ink-900)">Todas las cookies</h1>
   <p style="margin:0 0 22px;font-size:15px;line-height:1.6;color:var(--text-muted)">{{ catalogoResumen }}</p>
