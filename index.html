@@ -34,14 +34,18 @@
   @keyframes cc-resena { from { opacity:0; transform:perspective(900px) rotateX(-75deg) translateY(-24px); } 60% { opacity:1; } to { opacity:1; transform:none; } }
   @keyframes cc-brillo { 0%,100% { box-shadow:0 6px 0 var(--lila-300),0 0 0 0 rgba(122,79,182,.45),0 16px 26px -14px rgba(45,25,60,.38); } 50% { box-shadow:0 6px 0 var(--lila-300),0 0 0 8px rgba(122,79,182,0),0 16px 26px -14px rgba(45,25,60,.38); } }
   @keyframes cc-rise { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+  @keyframes cc-menu { from { transform:translateX(-100%); } to { transform:none; } }
 </style>
 </helmet>
 <div style="min-height:100vh;background:radial-gradient(ellipse 90% 55% at 100% 0%,color-mix(in oklch,var(--lila-300) 62%,transparent),transparent 70%) fixed,radial-gradient(ellipse 80% 55% at 0% 100%,color-mix(in oklch,var(--lila-300) 52%,transparent),transparent 70%) fixed,linear-gradient(180deg,var(--lila-100) 0%,var(--lila-50) 30%,var(--crema-50) 55%,var(--lila-100) 80%,var(--lila-200) 100%) fixed;font-family:var(--font-sans);color:var(--text-body);padding-bottom:92px">
 
 <header style="position:sticky;top:0;z-index:40;display:flex;flex-wrap:wrap;row-gap:8px;align-items:center;gap:clamp(5px,1.6vw,10px);padding:10px clamp(12px,4vw,56px);background:rgba(253,250,245,.92);backdrop-filter:saturate(1.3) blur(18px);border-bottom:1px solid var(--lila-200);box-shadow:0 6px 18px -14px rgba(69,38,108,.45)">
+  <button onClick="{{ abrirMenu }}" aria-label="Ver todas las categorías" aria-expanded="{{ menuAbierto }}" style="flex:0 0 auto;width:42px;height:42px;padding:0;border-radius:14px;border:1px solid var(--lila-300);background:var(--lila-100);color:var(--morado-700);cursor:pointer;display:grid;place-items:center">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+  </button>
   <div onClick="{{ irHome }}" role="button" tabindex="0" style="display:flex;align-items:center;gap:10px;cursor:pointer;flex:0 0 auto">
     <img src="assets/brand/sello-cookieco.png" alt="COOKIE.CO" style="width:38px;height:38px;border-radius:50%;flex:0 0 auto;box-shadow:var(--shadow-sm)">
-    <span style="font-family:var(--font-sans);font-size:15px;font-weight:800;letter-spacing:.06em;color:var(--ink-900);white-space:nowrap">COOKIE<span style="color:var(--morado-600)">.CO</span></span>
+    <span style="{{ marcaStyle }}">COOKIE<span style="color:var(--morado-600)">.CO</span></span>
   </div>
   <sc-if value="{{ navTexto }}" hint-placeholder-val="{{ true }}">
   <nav aria-label="Secciones" style="flex:0 1 auto;min-width:0;display:flex;align-items:center;gap:8px;margin-left:16px">
@@ -77,6 +81,31 @@
 
 <sc-if value="{{ promoVisible }}" hint-placeholder-val="{{ false }}">
   <div style="background:var(--ink-900);color:var(--crema-50);padding:9px clamp(16px,5vw,56px);font-size:13px;text-align:center;letter-spacing:.01em">{{ promoTexto }}</div>
+</sc-if>
+
+<!-- Menú de categorías (botón de arriba a la izquierda) -->
+<sc-if value="{{ menuAbierto }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ cerrarMenu }}" style="position:fixed;inset:0;z-index:96;background:rgba(18,15,13,.45);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)">
+    <nav onClick="{{ pararClick }}" aria-label="Todas las categorías" style="position:absolute;top:0;left:0;bottom:0;width:min(86vw,360px);overflow-y:auto;background:var(--crema-50);box-shadow:var(--shadow-xl);padding:18px 16px calc(24px + env(safe-area-inset-bottom));display:grid;align-content:start;gap:6px;animation:cc-menu .26s cubic-bezier(.22,.61,.36,1)">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 4px 10px;border-bottom:1px solid var(--lila-200);margin-bottom:6px">
+        <span style="font:400 28px/1.1 var(--font-display);color:var(--ink-900)">Categorías</span>
+        <button onClick="{{ cerrarMenu }}" aria-label="Cerrar" style="width:40px;height:40px;border-radius:50%;border:1px solid var(--border-default);background:var(--surface-card);cursor:pointer;font-size:20px;line-height:1;color:var(--ink-800)">×</button>
+      </div>
+      <sc-for list="{{ menuGrupos }}" as="mg" hint-placeholder-count="3">
+        <span style="margin:12px 6px 4px;font:600 11px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">{{ mg.titulo }}</span>
+        <sc-for list="{{ mg.items }}" as="mi" hint-placeholder-count="3">
+          <button onClick="{{ mi.ir }}" style="display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:8px 10px;border-radius:16px;border:none;background:transparent;cursor:pointer;text-align:left;font-family:var(--font-sans)" style-hover="background:var(--lila-100)">
+            <span aria-hidden="true" style="flex:0 0 auto;width:36px;height:36px;border-radius:12px;background:var(--lila-100);display:grid;place-items:center;font-size:18px">{{ mi.icono }}</span>
+            <span style="flex:1;min-width:0;display:grid;gap:2px">
+              <span style="font-size:15px;font-weight:700;color:var(--ink-900)">{{ mi.t }}</span>
+              <span style="font-size:12.5px;line-height:1.35;color:var(--text-muted)">{{ mi.d }}</span>
+            </span>
+            <span aria-hidden="true" style="color:var(--morado-600);font-weight:700">→</span>
+          </button>
+        </sc-for>
+      </sc-for>
+    </nav>
+  </div>
 </sc-if>
 
 <!-- ============================= HOME ============================= -->
@@ -140,6 +169,15 @@
   </sc-if>
   </sc-if>
 
+  <!-- Tira de fotos en movimiento -->
+  <section style="overflow:hidden;background:var(--crema-100);border-bottom:1px solid var(--border-subtle);padding:14px 0">
+    <div data-marquee="1" style="display:flex;gap:14px;width:max-content;animation:cc-marquee 38s linear infinite">
+      <sc-for list="{{ tiraFotos }}" as="t" hint-placeholder-count="0">
+        <img src="{{ t.foto }}" alt="{{ t.nombre }}" style="width:96px;height:96px;object-fit:cover;object-position:50% 70%;border-radius:14px;flex:0 0 auto;box-shadow:var(--shadow-sm)">
+      </sc-for>
+    </div>
+  </section>
+
   <!-- Una cookie de cada línea; el resto está en Categorías › Galletas -->
   <section data-reveal="1" aria-label="Nuestras cookies" style="width:min(1240px,calc(100% - 20px));box-sizing:border-box;background:color-mix(in oklch,var(--crema-50) 94%,transparent);border:1px solid var(--lila-200);border-radius:clamp(24px,4vw,40px);box-shadow:0 24px 60px -36px rgba(69,38,108,.45);margin:clamp(40px,6vw,72px) auto 0;padding:clamp(28px,5vw,52px) clamp(14px,4vw,44px);opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
     <div style="display:grid;justify-items:center;text-align:center;gap:10px;margin-bottom:26px">
@@ -190,7 +228,7 @@
   </section>
 
   <section data-reveal="1" style="max-width:1240px;margin:0 auto;padding:clamp(52px,8vw,96px) clamp(16px,5vw,56px) 0;opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
-    <span style="font:600 12px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">Lo que dicen</span>
+    <span id="resenas" style="font:600 12px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">Lo que dicen</span>
     <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin:10px 0 26px">
       <h2 style="font-family:var(--font-display);font-size:clamp(30px,6vw,42px);line-height:1.04;letter-spacing:-.02em;margin:0;color:var(--ink-900)">Calificaciones y comentarios</h2>
       <sc-if value="{{ hayResenas }}" hint-placeholder-val="{{ false }}">
@@ -425,7 +463,7 @@
   <section data-reveal="1" style="max-width:1240px;margin:0 auto;padding:clamp(52px,8vw,96px) clamp(16px,5vw,56px) 0;opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(24px,4vw,48px);align-items:center">
       <div style="display:grid;gap:16px;justify-items:start">
-        <span style="font:600 12px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">La experiencia</span>
+        <span id="experiencia" style="font:600 12px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">La experiencia</span>
         <h2 style="font-family:var(--font-display);font-size:clamp(30px,6vw,46px);line-height:1.04;letter-spacing:-.02em;margin:0;color:var(--ink-900)">Arma tu caja, sabor por sabor.</h2>
         <p style="margin:0;max-width:48ch;font-size:clamp(15px,1.7vw,17px);line-height:1.6;color:var(--text-muted)">Eliges el tamaño, tocas los sabores y ves cómo se llena la caja en tiempo real. Desde 3 cookies. Presentación para regalo y tarjeta si va de sorpresa.</p>
         <div style="display:flex;flex-wrap:wrap;gap:10px">
@@ -500,7 +538,7 @@
   </section>
 
   <section data-reveal="1" style="max-width:1240px;margin:0 auto;padding:clamp(52px,8vw,96px) clamp(16px,5vw,56px) 0;opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
-    <div style="display:flex;gap:8px;padding:5px;border-radius:999px;background:var(--crema-100);border:1px solid var(--border-subtle);width:max-content;max-width:100%;margin-bottom:22px">
+    <div id="lineas" style="display:flex;gap:8px;padding:5px;border-radius:999px;background:var(--crema-100);border:1px solid var(--border-subtle);width:max-content;max-width:100%;margin-bottom:22px">
       <button onClick="{{ verClasica }}" style="{{ btnClasica }}">Línea Clásica</button>
       <button onClick="{{ verEquilibrio }}" style="{{ btnEquilibrio }}">Línea Equilibrio</button>
     </div>
@@ -535,7 +573,7 @@
   <section data-reveal="1" style="margin-top:clamp(52px,8vw,96px);background:var(--grad-nocturno);color:var(--crema-50);opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
     <div style="max-width:1240px;margin:0 auto;padding:clamp(52px,8vw,88px) clamp(16px,5vw,56px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(28px,4vw,56px);align-items:center">
       <div style="display:grid;gap:18px;justify-items:start">
-        <span style="font:600 12px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--lila-300)">Cookies Premium</span>
+        <span id="premium" style="font:600 12px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--lila-300)">Cookies Premium</span>
         <h2 style="font-family:var(--font-display);font-style:italic;font-size:clamp(30px,6.2vw,52px);line-height:1.04;letter-spacing:-.02em;margin:0;color:var(--crema-50)">Para los amantes de lo extraordinario.</h2>
         <p style="margin:0;max-width:48ch;font-size:clamp(15px,1.7vw,17px);line-height:1.6;color:rgba(253,250,245,.72)">Ferrero Royale y Brownie Melt. Dos cookies con tratamiento aparte.</p>
         <div style="display:grid;gap:10px;width:100%;max-width:420px">
@@ -590,6 +628,75 @@
     </sc-for>
   </div>
 </main>
+<!-- Categorías: el test, las preguntas frecuentes, Instagram y el llamado a pedir (salieron de la portada) -->
+<div style="padding-bottom:56px">
+  <section id="test-cookie" data-reveal="1" style="max-width:1240px;margin:0 auto;padding:clamp(52px,8vw,96px) clamp(16px,5vw,56px) 0;opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px">
+      <div onClick="{{ irQuiz }}" role="button" tabindex="0" style="padding:clamp(24px,4vw,40px);border-radius:32px;background:var(--grad-vitrina);border:1px solid var(--border-subtle);cursor:pointer;display:grid;gap:14px;align-content:start;box-shadow:var(--shadow-sm)" style-hover="box-shadow:var(--shadow-lg);transform:translateY(-6px)">
+        <span style="font:600 12px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">5 preguntas</span>
+        <span style="font-family:var(--font-display);font-size:clamp(26px,4.4vw,34px);line-height:1.06;color:var(--ink-900)">¿Qué cookie eres?</span>
+        <span style="font-size:15px;line-height:1.6;color:var(--text-muted);max-width:40ch">Te decimos cuál pedir y por qué. Menos de un minuto.</span>
+        <span style="font-size:14px;font-weight:700;color:var(--morado-600)">Hacer el test →</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="preguntas" data-reveal="1" style="max-width:840px;margin:0 auto;padding:clamp(52px,8vw,96px) clamp(16px,5vw,56px) 0;opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
+    <h2 style="font-family:var(--font-display);font-size:clamp(28px,5.4vw,38px);line-height:1.04;letter-spacing:-.02em;margin:0 0 22px;color:var(--ink-900)">Preguntas frecuentes</h2>
+    <div style="display:grid;gap:16px">
+      <sc-for list="{{ faqHome }}" as="q" hint-placeholder-count="4">
+        <div style="{{ q.card }}" style-hover="{{ q.cardHover }}">
+          <button onClick="{{ q.toggle }}" aria-expanded="{{ q.expandido }}" style="width:100%;min-height:68px;padding:14px 16px;display:flex;align-items:center;gap:14px;background:transparent;border:none;cursor:pointer;text-align:left;transition:transform .12s cubic-bezier(.22,.61,.36,1)" style-active="transform:translateY(3px) scale(.985)">
+            <span style="{{ q.num }}">{{ q.n }}</span>
+            <span style="flex:1;min-width:0;font-family:var(--font-sans);font-size:15px;font-weight:700;line-height:1.4;color:var(--ink-900);text-wrap:pretty">{{ q.q }}</span>
+            <span style="{{ q.knob }}"><span style="{{ q.knobIcon }}">+</span></span>
+          </button>
+          <sc-if value="{{ q.abierto }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:0 14px 16px;animation:cc-rise .32s cubic-bezier(.22,.61,.36,1)">
+              <p style="margin:0;padding:16px 18px;border-radius:16px;background:var(--surface-card);box-shadow:inset 0 0 0 1px rgba(122,79,182,.18),0 6px 14px -10px rgba(45,25,60,.3);font-size:14px;line-height:1.65;color:var(--text-body);max-width:62ch;text-wrap:pretty">{{ q.a }}</p>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+    <div style="margin-top:18px"><span onClick="{{ irAyuda }}" role="button" tabindex="0" style="font-size:14px;font-weight:600;color:var(--morado-600);cursor:pointer">Ver todas las preguntas y contacto →</span></div>
+  </section>
+
+  <!-- Instagram: fotos del catálogo que llevan al perfil -->
+  <section id="instagram" data-reveal="1" aria-label="Instagram" style="max-width:1240px;margin:0 auto;padding:clamp(52px,8vw,96px) clamp(16px,5vw,56px) 0;opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
+    <span style="font:600 12px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--morado-600)">Síguenos en Instagram</span>
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin:10px 0 26px">
+      <div style="display:grid;gap:10px">
+        <h2 onClick="{{ abrirInstagram }}" role="link" tabindex="0" style="font-family:var(--font-display);font-size:clamp(30px,6vw,42px);line-height:1.04;letter-spacing:-.02em;margin:0;color:var(--ink-900);cursor:pointer">@cookie.co_cl</h2>
+        <p style="margin:0;max-width:46ch;font-size:15px;line-height:1.6;color:var(--text-muted)">Sabores nuevos, ediciones de temporada y lo que sale del horno cada semana. Síguenos y escríbenos cuando quieras.</p>
+      </div>
+      <span onClick="{{ abrirInstagram }}" role="link" tabindex="0" style="font-size:14px;font-weight:600;color:var(--morado-600);cursor:pointer">Ver perfil →</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(max(15%,min(28%,170px)),1fr));gap:clamp(6px,1.4vw,14px)">
+      <sc-for list="{{ igFotos }}" as="ig" hint-placeholder-count="6">
+        <div onClick="{{ ig.abrir }}" role="link" tabindex="0" aria-label="{{ ig.alt }}" style="position:relative;aspect-ratio:1/1;border-radius:clamp(12px,2vw,22px);overflow:hidden;background:#FCF7F2;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .26s cubic-bezier(.22,.61,.36,1),box-shadow .26s cubic-bezier(.22,.61,.36,1)" style-hover="transform:translateY(-4px);box-shadow:var(--shadow-md)">
+          <img src="{{ ig.foto }}" alt="{{ ig.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:50% 20%">
+          <span style="position:absolute;right:8px;bottom:8px;width:30px;height:30px;border-radius:999px;background:rgba(253,250,245,.9);display:grid;place-items:center;box-shadow:var(--shadow-xs)"><img src="assets/social/instagram.svg" alt="" width="15" height="15" style="display:block;width:15px;height:15px"></span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:22px">
+      <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" size="lg" onClick="{{ abrirInstagram }}" hint-size="210px,54px">Seguir en Instagram</x-import>
+      <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" variant="secondary" size="lg" onClick="{{ abrirWhatsapp }}" hint-size="210px,54px">Escribir por WhatsApp</x-import>
+    </div>
+  </section>
+
+  <section id="pedir" data-reveal="1" style="margin-top:clamp(52px,8vw,96px);background:var(--crema-100);border-top:1px solid var(--border-subtle);opacity:0;transform:perspective(1400px) rotateX(10deg) translateY(40px);transform-origin:50% 0;transition:opacity .42s cubic-bezier(.22,.61,.36,1),transform .42s cubic-bezier(.22,.61,.36,1)">
+    <div style="max-width:1240px;margin:0 auto;padding:clamp(48px,7vw,80px) clamp(16px,5vw,56px);display:grid;gap:20px;justify-items:center;text-align:center">
+      <h2 style="font-family:var(--font-display);font-size:clamp(30px,6.4vw,52px);line-height:1.04;letter-spacing:-.02em;margin:0;color:var(--ink-900);max-width:20ch">Tu antojo ya tiene fecha.</h2>
+      <p style="margin:0;max-width:44ch;font-size:16px;line-height:1.6;color:var(--text-muted)">Armas tu caja acá, la confirmamos por WhatsApp y la horneamos para tu día.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center">
+        <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" size="lg" onClick="{{ irBox }}" hint-size="180px,54px">Crear mi Box</x-import>
+        <x-import component-from-global-scope="CookieCoDesignSystem_9ccd72.Button" variant="secondary" size="lg" onClick="{{ abrirWhatsapp }}" hint-size="180px,54px">Escribir por WhatsApp</x-import>
+      </div>
+    </div>
+  </section>
+</div>
 </sc-if>
 
 <!-- ============================= FICHA DE PRODUCTO ============================= -->
@@ -2291,6 +2398,15 @@ class Component extends DCLogic {
   /* «Cómo se pide» ahora vive en Categorías › Galletas */
   irComoReservo = () => { if (this.state.ruta !== 'catalogo') this.ir('catalogo'); this.bajarA('como-reservo'); };
   irCategorias = () => this.ir('categorias');
+  abrirMenu = () => this.setState({ menuAbierto: true });
+  cerrarMenu = () => this.setState({ menuAbierto: false });
+  /* Ir desde el menú: cambia de página si hace falta y baja hasta la sección */
+  irDesdeMenu = (ruta, id) => {
+    const misma = this.state.ruta === ruta;
+    this.setState({ menuAbierto: false });
+    if (!misma) this.ir(ruta);
+    if (id) this.bajarA(id); else if (misma) window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   /* Cotizador de tortas byLubakery (sin precios: la cotización se responde por WhatsApp) */
   TORTA_OPCIONES = {
     porciones: ['2 porciones', '4–6 porciones', '8–10 porciones', '15 porciones'],
@@ -2436,6 +2552,29 @@ class Component extends DCLogic {
       esBox: s.ruta === 'box', esQuiz: s.ruta === 'quiz', esFavoritos: s.ruta === 'favoritos',
       esCarrito: s.ruta === 'carrito', esCheckout: s.ruta === 'checkout', esConfirmacion: s.ruta === 'confirmacion',
       esCuenta: s.ruta === 'cuenta', esAyuda: s.ruta === 'ayuda', esTortas: s.ruta === 'tortas', esCategorias: s.ruta === 'categorias', irCategorias: this.irCategorias,
+      /* en celulares angostos el texto COOKIE.CO se oculta para que quepa el botón de categorías (queda el sello) */
+      marcaStyle: 'font-family:var(--font-sans);font-size:15px;font-weight:800;letter-spacing:.06em;color:var(--ink-900);white-space:nowrap' + ((s.ancho || window.innerWidth) < 380 ? ';display:none' : ''),
+      menuAbierto: !!s.menuAbierto, abrirMenu: this.abrirMenu, cerrarMenu: this.cerrarMenu,
+      menuGrupos: [
+        { titulo: 'Galletas', items: [
+          ['🍪', 'Todas las cookies', 'El catálogo completo', 'catalogo'],
+          ['📦', 'Crear mi Box', 'Arma tu caja desde 3 unidades', 'box'],
+          ['✨', 'Arma tu caja, sabor por sabor', 'Cómo funciona la caja', 'catalogo', 'experiencia'],
+          ['🌿', 'Línea Clásica y Equilibrio', 'Con azúcar o sin azúcar añadida', 'catalogo', 'lineas'],
+          ['👑', 'Cookies Premium', 'Ferrero Royale y Brownie Melt', 'catalogo', 'premium'],
+          ['📝', 'Cómo se pide', 'Reserva en 4 pasos', 'catalogo', 'como-reservo'],
+        ] },
+        { titulo: 'Tortas', items: [
+          ['🎂', 'Tortas byLubakery', 'Tortas semipersonalizadas y cotizador', 'tortas'],
+        ] },
+        { titulo: 'Más de COOKIE.CO', items: [
+          ['🔮', '¿Qué cookie eres?', 'Test de 5 preguntas', 'categorias', 'test-cookie'],
+          ['❓', 'Preguntas frecuentes', 'Entregas, anticipación y pagos', 'categorias', 'preguntas'],
+          ['📸', 'Instagram', 'Lo nuevo de cada semana', 'categorias', 'instagram'],
+          ['💜', 'Nuestra historia', 'Conoce a Luisana', 'home', 'historia'],
+          ['⭐', 'Reseñas', 'Lo que dicen nuestras clientas', 'home', 'resenas'],
+        ] },
+      ].map(gr => ({ titulo: gr.titulo, items: gr.items.map(([icono, t, d, ruta, id]) => ({ icono, t, d, ir: () => this.irDesdeMenu(ruta, id) })) })),
       heroMovil: (s.ancho || window.innerWidth) < 720, heroEscritorio: (s.ancho || window.innerWidth) >= 720,
       categorias: [
         { titulo: 'Galletas', texto: 'New York Cookies de 120 a 150 g, horneadas por encargo. Arma tu box sabor por sabor, desde 3 unidades.', cta: 'Ver galletas y armar mi box', foto: 'assets/cookies/v2/nutella-classic.jpeg', alt: 'Cookie Nutella Classic', pos: '50% 78%', ir: () => this.ir('catalogo') },
