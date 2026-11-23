@@ -285,7 +285,7 @@ export const QUIZ = [
 ];
 
 export const FAQ = [
-  { q: '¿Cuánto pesa cada cookie?', a: 'Aproximadamente 130 gramos. Son cookies estilo New York: crujientes por fuera, suaves y húmedas por dentro, generosas en relleno.' },
+  { q: '¿Cuánto pesa cada cookie?', a: 'Entre 130 y 150 gramos cada una. Son cookies estilo New York: crujientes por fuera, suaves y húmedas por dentro, generosas en relleno.' },
   { q: '¿Con cuánta anticipación debo pedir?', a: 'Necesitamos un mínimo de 48 horas antes de la fecha de entrega o retiro, porque horneamos por encargo y planificamos la producción. Puedes pedir con mucha más anticipación, sujeto a disponibilidad de agenda.' },
   { q: '¿Puedo cancelar o cambiar mi pedido?', a: 'Sí, con al menos 48 horas de anticipación: gestionamos la devolución del monto pagado. Dentro de las 48 horas previas el pedido entra en producción y no aceptamos cancelaciones por cambio de opinión, sin perjuicio de tus derechos legales.' },
   { q: '¿Cómo las conservo?', a: 'En un recipiente hermético a temperatura ambiente. Se disfrutan mejor el mismo día; puedes darles 10 segundos de microondas para recuperar el centro.' },
