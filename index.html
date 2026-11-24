@@ -240,11 +240,12 @@
       <sc-for list="{{ dosCookies }}" as="c" hint-placeholder-count="2">
         <div onClick="{{ c.abrir }}" role="button" tabindex="0" style="position:relative;display:grid;grid-template-rows:auto 1fr;border-radius:22px;overflow:hidden;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-sm);cursor:pointer;transition:transform .26s cubic-bezier(.22,.61,.36,1)" style-hover="transform:translateY(-6px)">
           <div style="position:relative;aspect-ratio:2/3;background:#FCF7F2;overflow:hidden">
-            <img src="{{ c.foto }}" alt="{{ c.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:50% 0%;background:#FCF7F2">
+            <img src="{{ c.foto }}" alt="{{ c.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:contain;object-position:50% 50%;background:#FCF7F2">
             <span style="position:absolute;top:10px;left:10px;height:24px;display:inline-flex;align-items:center;padding:0 10px;border-radius:999px;background:rgba(253,250,245,.88);backdrop-filter:saturate(1.3) blur(18px);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--morado-700)">{{ c.lineaCorta }}</span>
           </div>
           <div style="padding:clamp(12px,2.4vw,18px);display:grid;gap:6px;align-content:start">
             <span style="font:400 clamp(17px,2.4vw,20px)/1.2 var(--font-display);color:var(--ink-900)">{{ c.nombre }}</span>
+            <span style="font-size:12.5px;line-height:1.45;color:var(--text-muted)">{{ c.corta }}</span>
             <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-top:6px">
               <span style="font-family:var(--font-mono);font-size:14px;color:var(--ink-900)">{{ c.precio }}</span>
               <button onClick="{{ c.add }}" style="height:34px;padding:0 14px;border-radius:999px;border:none;cursor:pointer;background:var(--accent-soft);color:var(--morado-700);font-family:var(--font-sans);font-size:13px;font-weight:600" style-hover="background:var(--accent-primary);color:var(--crema-50)">Agregar</button>
@@ -436,7 +437,7 @@
       <div style="position:absolute;inset:0;perspective:1300px;perspective-origin:50% 30%;touch-action:pan-y;user-select:none">
       <sc-for list="{{ abanico }}" as="a" hint-placeholder-count="7">
         <div onClick="{{ a.click }}" onPointerEnter="{{ a.hover }}" role="button" tabindex="0" aria-label="{{ a.aria }}" style="{{ a.style }}">
-          <img src="{{ a.foto }}" alt="" draggable="false" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 0%;background:#FCF7F2;display:block;pointer-events:none">
+          <img src="{{ a.foto }}" alt="" draggable="false" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:50% 50%;background:#FCF7F2;display:block;pointer-events:none">
           <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(45,25,60,0) 78%,rgba(45,25,60,.78));pointer-events:none"></div>
           <div style="position:absolute;left:14px;right:14px;bottom:12px;display:grid;gap:2px;pointer-events:none">
             <span style="font:400 20px/1.1 var(--font-display);color:var(--crema-50)">{{ a.nombre }}</span>
@@ -488,7 +489,7 @@
           <div onClick="{{ c.abrir }}" role="button" tabindex="0" style="position:relative;display:grid;grid-template-rows:auto 1fr;align-content:start;border-radius:22px;overflow:hidden;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-sm);cursor:pointer;transition:transform .26s cubic-bezier(.22,.61,.36,1),box-shadow .26s cubic-bezier(.22,.61,.36,1)" style-hover="transform:translateY(-6px);box-shadow:var(--shadow-lg)">
             <div style="position:relative;aspect-ratio:2/3;background:#FCF7F2;overflow:hidden">
               <sc-if value="{{ c.hasFoto }}" hint-placeholder-val="{{ false }}">
-                <img src="{{ c.foto }}" alt="{{ c.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:50% 0%;background:#FCF7F2">
+                <img src="{{ c.foto }}" alt="{{ c.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:contain;object-position:50% 50%;background:#FCF7F2">
               </sc-if>
               <sc-if value="{{ c.sinFoto }}" hint-placeholder-val="{{ false }}">
                 <div style="position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(135deg,var(--crema-100) 0 10px,var(--crema-200) 10px 20px)"><span style="font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;color:var(--ink-400);text-align:center;padding:0 12px">FOTO PENDIENTE<br>{{ c.nombreUpper }}</span></div>
@@ -499,6 +500,7 @@
             <div style="padding:16px;display:grid;gap:6px">
               <span style="font:400 18px/1.25 var(--font-display);color:var(--ink-900)">{{ c.nombre }}</span>
               <span style="font-size:12px;color:var(--morado-600);font-weight:600">{{ c.lineaCorta }}</span>
+              <span style="font-size:13px;line-height:1.5;color:var(--text-muted)">{{ c.corta }}</span>
               <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;gap:8px">
                 <span style="font-family:var(--font-mono);font-size:15px;color:var(--ink-900)">{{ c.precio }}</span>
                 <button onClick="{{ c.add }}" style="height:36px;padding:0 14px;border-radius:999px;border:none;cursor:pointer;background:var(--accent-soft);color:var(--morado-700);font-family:var(--font-sans);font-size:13px;font-weight:600" style-hover="background:var(--accent-primary);color:var(--crema-50)">Agregar</button>
@@ -612,7 +614,7 @@
         <sc-for list="{{ lineaFotos }}" as="f" hint-placeholder-count="4">
           <div onClick="{{ f.abrir }}" role="button" tabindex="0" style="position:relative;aspect-ratio:2/3;border-radius:18px;overflow:hidden;cursor:pointer;box-shadow:var(--shadow-sm);background:var(--grad-vitrina)">
             <sc-if value="{{ f.hasFoto }}" hint-placeholder-val="{{ false }}">
-              <img src="{{ f.foto }}" alt="{{ f.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:50% 0%;background:#FCF7F2">
+              <img src="{{ f.foto }}" alt="{{ f.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:contain;object-position:50% 50%;background:#FCF7F2">
             </sc-if>
             <sc-if value="{{ f.sinFoto }}" hint-placeholder-val="{{ false }}">
               <div style="position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(135deg,var(--crema-100) 0 10px,var(--crema-200) 10px 20px)"><span style="font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;color:var(--ink-400);text-align:center;padding:0 10px">FOTO PENDIENTE</span></div>
@@ -648,7 +650,7 @@
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:clamp(14px,3vw,24px)">
     <sc-for list="{{ categorias }}" as="k" hint-placeholder-count="2">
       <div onClick="{{ k.ir }}" role="link" tabindex="0" aria-label="{{ k.titulo }}" style="display:grid;grid-template-rows:auto 1fr;border-radius:28px;overflow:hidden;background:var(--surface-card);border:1px solid var(--lila-200);box-shadow:0 24px 50px -34px rgba(69,38,108,.55);cursor:pointer;transition:transform .26s cubic-bezier(.22,.61,.36,1)" style-hover="transform:translateY(-6px)">
-        <img src="{{ k.foto }}" alt="{{ k.alt }}" loading="lazy" style="width:100%;aspect-ratio:4/3;object-fit:cover;object-position:{{ k.pos }};display:block;background:#FCF7F2">
+        <img src="{{ k.foto }}" alt="{{ k.alt }}" loading="lazy" style="width:100%;height:clamp(260px,42vh,420px);object-fit:contain;object-position:50% 50%;display:block;background:#FBF4EC">
         <div style="padding:clamp(18px,3vw,26px);display:grid;gap:8px;align-content:start">
           <span style="font:400 clamp(26px,4vw,34px)/1.05 var(--font-display);color:var(--ink-900)">{{ k.titulo }}</span>
           <span style="font-size:15px;line-height:1.55;color:var(--text-muted)">{{ k.texto }}</span>
@@ -788,7 +790,7 @@
         <div onClick="{{ r.abrir }}" role="button" tabindex="0" style="border-radius:18px;overflow:hidden;background:var(--surface-card);border:1px solid var(--border-subtle);cursor:pointer;box-shadow:var(--shadow-xs)" style-hover="box-shadow:var(--shadow-md);transform:translateY(-4px)">
           <div style="position:relative;aspect-ratio:2/3;background:#FCF7F2">
             <sc-if value="{{ r.hasFoto }}" hint-placeholder-val="{{ false }}">
-              <img src="{{ r.foto }}" alt="{{ r.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:50% 0%;background:#FCF7F2">
+              <img src="{{ r.foto }}" alt="{{ r.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:contain;object-position:50% 50%;background:#FCF7F2">
             </sc-if>
             <sc-if value="{{ r.sinFoto }}" hint-placeholder-val="{{ false }}">
               <div style="position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(135deg,var(--crema-100) 0 10px,var(--crema-200) 10px 20px)"><span style="font-family:var(--font-mono);font-size:9px;letter-spacing:.08em;color:var(--ink-400)">FOTO PENDIENTE</span></div>
@@ -1039,7 +1041,7 @@
       <div style="border-radius:32px;overflow:hidden;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-lg);display:grid">
         <div style="position:relative;aspect-ratio:2/3;background:#FCF7F2">
           <sc-if value="{{ quizHasFoto }}" hint-placeholder-val="{{ false }}">
-            <img src="{{ quizFoto }}" alt="{{ quizAlt }}" style="width:100%;height:100%;object-fit:cover;object-position:50% 0%;background:#FCF7F2">
+            <img src="{{ quizFoto }}" alt="{{ quizAlt }}" style="width:100%;height:100%;object-fit:contain;object-position:50% 50%;background:#FCF7F2">
           </sc-if>
           <sc-if value="{{ quizSinFoto }}" hint-placeholder-val="{{ false }}">
             <div style="position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(135deg,var(--crema-100) 0 12px,var(--crema-200) 12px 24px)"><span style="font-family:var(--font-mono);font-size:11px;color:var(--ink-400)">FOTO PENDIENTE</span></div>
@@ -1087,7 +1089,7 @@
       <div onClick="{{ c.abrir }}" role="button" tabindex="0" style="position:relative;display:grid;grid-template-rows:auto 1fr;align-content:start;border-radius:22px;overflow:hidden;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-sm);cursor:pointer" style-hover="transform:translateY(-6px);box-shadow:var(--shadow-lg)">
         <div style="position:relative;aspect-ratio:2/3;background:#FCF7F2;overflow:hidden">
           <sc-if value="{{ c.hasFoto }}" hint-placeholder-val="{{ false }}">
-            <img src="{{ c.foto }}" alt="{{ c.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:50% 0%;background:#FCF7F2">
+            <img src="{{ c.foto }}" alt="{{ c.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:contain;object-position:50% 50%;background:#FCF7F2">
           </sc-if>
           <sc-if value="{{ c.sinFoto }}" hint-placeholder-val="{{ false }}">
             <div style="position:absolute;inset:0;display:grid;place-items:center;background:repeating-linear-gradient(135deg,var(--crema-100) 0 10px,var(--crema-200) 10px 20px)"><span style="font-family:var(--font-mono);font-size:10px;color:var(--ink-400)">FOTO PENDIENTE</span></div>
@@ -1403,10 +1405,16 @@
       </div>
     <div aria-label="Tortas byLubakery" style="margin-top:clamp(28px,4vw,40px);display:grid;grid-template-columns:repeat(auto-fill,minmax(min(45%,240px),1fr));gap:clamp(10px,2vw,16px)">
       <sc-for list="{{ tortaFotos }}" as="tf" hint-placeholder-count="7">
-        <button onClick="{{ tf.abrir }}" aria-label="{{ tf.label }}" style="position:relative;width:100%;aspect-ratio:4/5;padding:0;border:none;border-radius:22px;overflow:hidden;box-shadow:var(--shadow-md);background:var(--crema-100);cursor:zoom-in">
-          <img src="{{ tf.src }}" alt="{{ tf.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block">
-          <span style="position:absolute;left:12px;bottom:12px;height:30px;padding:0 12px;display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:rgba(253,250,245,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-size:12px;font-weight:600;color:var(--ink-900)">🔍 Ver detalle</span>
-        </button>
+        <article style="display:grid;grid-template-rows:auto 1fr;border-radius:22px;overflow:hidden;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-md)">
+          <button onClick="{{ tf.abrir }}" aria-label="{{ tf.label }}" style="position:relative;width:100%;aspect-ratio:3/4;padding:0;border:none;background:#F7EFE6;cursor:zoom-in">
+            <img src="{{ tf.src }}" alt="{{ tf.alt }}" loading="lazy" style="width:100%;height:100%;object-fit:contain;object-position:50% 50%;display:block">
+            <span style="position:absolute;left:10px;bottom:10px;height:30px;padding:0 12px;display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:rgba(253,250,245,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-size:12px;font-weight:600;color:var(--ink-900)">🔍 Ver detalle</span>
+          </button>
+          <div style="padding:clamp(12px,2.4vw,16px);display:grid;gap:5px;align-content:start">
+            <span style="font:400 clamp(17px,2.4vw,20px)/1.2 var(--font-display);color:var(--ink-900)">{{ tf.titulo }}</span>
+            <span style="font-size:13px;line-height:1.5;color:var(--text-muted)">{{ tf.texto }}</span>
+          </div>
+        </article>
       </sc-for>
     </div>
       <div id="cotizador" style="margin:clamp(32px,5vw,56px) auto 0;max-width:640px;display:grid;gap:20px;padding:clamp(18px,3vw,28px);border-radius:28px;background:var(--surface-card);border:1px solid var(--border-subtle);box-shadow:var(--shadow-md)">
@@ -2464,13 +2472,13 @@ class Component extends DCLogic {
     extra: ['Sin detalle adicional', 'Flores naturales', 'Frutillas frescas', 'Mariposas y esferas doradas', 'Otro (lo cuento en el escrito)'],
   };
   TORTA_FOTOS = [
-    { src: 'assets/tortas/frutillas.jpg', alt: 'Torta de crema con frutillas frescas', detalle: 'Frutillas frescas y crema' },
-    { src: 'assets/tortas/red-velvet-lucas.jpg', alt: 'Torta Red Velvet con «Feliz Cumpleaños Lucas» escrito', detalle: 'Escrito con nombre y migas de Red Velvet' },
-    { src: 'assets/tortas/michelle-flores.jpg', alt: 'Torta personalizada con nombre y flores rosadas', detalle: 'Nombre dorado y flores naturales' },
-    { src: 'assets/tortas/birthday-queen-dorada.jpg', alt: 'Torta blanca con mariposas y esferas doradas', detalle: 'Mariposas y esferas doradas' },
-    { src: 'assets/tortas/feliz-cumple-chispas.jpg', alt: 'Torta con chispas de colores y «Feliz Cumple Princesa» escrito', detalle: 'Escrito y chispas de colores' },
-    { src: 'assets/tortas/happy-birthday-azul.jpg', alt: 'Torta con «Happy Birthday» escrito en azul', detalle: 'Escrito con corazones' },
-    { src: 'assets/tortas/bento-chocolate.jpg', alt: 'Mini torta de chocolate con topper «Happy Birthday»', detalle: 'Mini torta con topper dorado' },
+    { src: 'assets/tortas/frutillas.jpg', titulo: 'Frutillas con crema', texto: 'Cubierta de crema suave y coronada con frutillas frescas. Un clásico para cumpleaños y celebraciones en familia.', alt: 'Torta de crema con frutillas frescas', detalle: 'Frutillas frescas y crema' },
+    { src: 'assets/tortas/red-velvet-lucas.jpg', titulo: 'Red Velvet con nombre', texto: 'Bizcocho Red Velvet con escrito personalizado y migas de Red Velvet en el borde. Ideal para un cumpleaños con nombre propio.', alt: 'Torta Red Velvet con «Feliz Cumpleaños Lucas» escrito', detalle: 'Escrito con nombre y migas de Red Velvet' },
+    { src: 'assets/tortas/michelle-flores.jpg', titulo: 'Nombre y flores', texto: 'Torta blanca con el nombre en dorado y flores naturales rosadas. Delicada y elegante para una fecha especial.', alt: 'Torta personalizada con nombre y flores rosadas', detalle: 'Nombre dorado y flores naturales' },
+    { src: 'assets/tortas/birthday-queen-dorada.jpg', titulo: 'Mariposas doradas', texto: 'Torta blanca decorada con mariposas y esferas doradas. Para celebrar a lo grande, con un toque de brillo.', alt: 'Torta blanca con mariposas y esferas doradas', detalle: 'Mariposas y esferas doradas' },
+    { src: 'assets/tortas/feliz-cumple-chispas.jpg', titulo: 'Chispas de colores', texto: 'Escrito personalizado y chispas de colores. Alegre y colorida, perfecta para un cumpleaños infantil.', alt: 'Torta con chispas de colores y «Feliz Cumple Princesa» escrito', detalle: 'Escrito y chispas de colores' },
+    { src: 'assets/tortas/happy-birthday-azul.jpg', titulo: 'Happy Birthday', texto: 'Escrito «Happy Birthday» en azul con corazones. Sencilla, linda y lista para soplar las velas.', alt: 'Torta con «Happy Birthday» escrito en azul', detalle: 'Escrito con corazones' },
+    { src: 'assets/tortas/bento-chocolate.jpg', titulo: 'Mini torta de chocolate', texto: 'Mini torta tipo bento de chocolate con topper dorado. Ideal para regalar o para una celebración íntima.', alt: 'Mini torta de chocolate con topper «Happy Birthday»', detalle: 'Mini torta con topper dorado' },
   ];
   abrirTortaVista = i => this.setState({ tortaVista: i, tortaZoom: false });
   cerrarTortaVista = e => { if (e && e.stopPropagation) e.stopPropagation(); this.setState({ tortaVista: null, tortaZoom: false }); };
@@ -2784,7 +2792,7 @@ class Component extends DCLogic {
     v.onTortaFecha = e => this.setTorta('fecha', e.target.value);
     v.tortaRef = !!t.ref; v.tortaRefSrc = t.ref ? t.ref.src : ''; v.tortaRefDetalle = t.ref ? t.ref.detalle : '';
     v.quitarReferencia = this.quitarReferencia;
-    v.tortaFotos = this.TORTA_FOTOS.map((f, i) => ({ src: f.src, alt: f.alt, label: 'Ver detalle: ' + f.alt, abrir: () => this.abrirTortaVista(i) }));
+    v.tortaFotos = this.TORTA_FOTOS.map((f, i) => ({ src: f.src, alt: f.alt, titulo: f.titulo, texto: f.texto, label: 'Ver detalle: ' + f.alt, abrir: () => this.abrirTortaVista(i) }));
     const tv = s.tortaVista !== null ? this.TORTA_FOTOS[s.tortaVista] : null;
     v.tortaVistaAbierta = !!tv;
     if (tv) {
