@@ -1605,6 +1605,7 @@ class Component extends DCLogic {
       this.forceUpdate();
     };
     window.addEventListener('storage', this.onStorage);
+    setTimeout(() => { this.activarVideoHero(); this.activarVideoHistoria(); }, 0);
     this.onTecla = e => { if (e.key === 'Escape' && (this.state.vistaSlug || this.state.menuAbierto)) this.setState({ vistaSlug: null, zoom: false, menuAbierto: false }); };
     window.addEventListener('keydown', this.onTecla);
     this.escalarHero = () => {
@@ -1733,24 +1734,51 @@ class Component extends DCLogic {
     const borde = angosto ? 'none' : 'linear-gradient(90deg,transparent,#000 2.5%,#000 97.5%,transparent)';
     v.style.webkitMaskImage = borde; v.style.maskImage = borde;
   }
+  /* Videos que deben correr solos (hero e historia), sin sonido.
+     El motor de plantillas no conserva muted/playsinline/autoplay, y Safari en iPhone solo
+     reproduce solo un video si esos atributos están puestos antes de llamar a play(). */
+  prepararVideo(v) {
+    v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true; v.autoplay = true;
+    ['muted', 'playsinline', 'webkit-playsinline', 'autoplay', 'loop'].forEach(a => v.setAttribute(a, ''));
+    v.removeAttribute('controls');
+  }
+  reproducir(v) {
+    if (!v || !v.isConnected) return;
+    const p = v.play(); if (p && p.catch) p.catch(() => {});
+  }
+  /* Respaldo: si el navegador bloqueó el arranque automático (p. ej. modo de ahorro de batería),
+     el primer toque, desliz o clic en cualquier parte de la página lo pone en marcha. */
+  activarRespaldoVideos() {
+    if (this.respaldoVideos) return;
+    this.respaldoVideos = () => ['cc-hero-video', 'cc-historia-video'].forEach(id => {
+      const v = document.getElementById(id);
+      if (v && v.paused && v.getAttribute('src') && (id === 'cc-hero-video' || v.dataset.visible === '1')) this.reproducir(v);
+    });
+    ['touchstart', 'pointerdown', 'scroll', 'keydown'].forEach(t => window.addEventListener(t, this.respaldoVideos, { passive: true }));
+    this.alVolver = () => { if (!document.hidden) this.respaldoVideos(); };
+    document.addEventListener('visibilitychange', this.alVolver);
+    window.addEventListener('pageshow', this.alVolver);
+  }
   activarVideoHero() {
     this.medirHero();
     const v = document.getElementById('cc-hero-video');
     if (!v || v.dataset.listo) return;
     v.dataset.listo = '1';
-    v.muted = true; v.loop = true; v.playsInline = true; // el motor de plantillas no conserva estos atributos
-    if (this.reduce) { v.pause(); v.removeAttribute('autoplay'); return; }
-    v.play().catch(() => {});
+    this.prepararVideo(v);
+    this.activarRespaldoVideos();
+    this.reproducir(v);
+    ['loadedmetadata', 'canplay'].forEach(t => v.addEventListener(t, () => { if (v.paused) this.reproducir(v); }, { once: true }));
   }
   activarVideoHistoria() {
     const v = document.getElementById('cc-historia-video');
     if (!v || v.dataset.listo) return;
     v.dataset.listo = '1';
-    v.muted = true; v.loop = true; v.playsInline = true; // el motor de plantillas no conserva estos atributos
-    if (this.reduce) { v.src = v.dataset.src; v.preload = 'metadata'; v.controls = true; return; }
-    if (!('IntersectionObserver' in window)) { v.src = v.dataset.src; v.play().catch(() => {}); return; }
+    this.prepararVideo(v);
+    this.activarRespaldoVideos();
+    if (!('IntersectionObserver' in window)) { v.src = v.dataset.src; v.dataset.visible = '1'; this.reproducir(v); return; }
     new IntersectionObserver(es => es.forEach(e => {
-      if (e.isIntersecting) { if (!v.getAttribute('src')) v.src = v.dataset.src; v.play().catch(() => {}); }
+      v.dataset.visible = e.isIntersecting ? '1' : '';
+      if (e.isIntersecting) { if (!v.getAttribute('src')) v.src = v.dataset.src; this.reproducir(v); }
       else v.pause();
     }), { threshold: .25 }).observe(v);
   }
@@ -1772,6 +1800,8 @@ class Component extends DCLogic {
     window.removeEventListener('scroll', this.onScroll);
     window.removeEventListener('storage', this.onStorage);
     window.removeEventListener('keydown', this.onTecla);
+    if (this.respaldoVideos) ['touchstart', 'pointerdown', 'scroll', 'keydown'].forEach(t => window.removeEventListener(t, this.respaldoVideos));
+    if (this.alVolver) { document.removeEventListener('visibilitychange', this.alVolver); window.removeEventListener('pageshow', this.alVolver); }
     if (this.apagar3D) this.apagar3D();
     window.removeEventListener('resize', this.escalarHero);
     window.removeEventListener('resize', this.alRedimensionarHero);
